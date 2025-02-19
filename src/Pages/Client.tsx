@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AdminNavbar from '../Components/AdminNavbar';
 import Turtle from '../assets/Images/NT.png';
+import AddClientModal from '../Components/Modal/AddClientModal';
 
 const Client: React.FC = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <div className="bg-white flex flex-col h-screen w-full overflow-hidden">
             <AdminNavbar />
@@ -21,7 +24,10 @@ const Client: React.FC = () => {
                             <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
                         </div>
 
-                        <div className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer">
+                        <div 
+                            className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer"
+                            onClick={() => setIsModalOpen(true)}
+                        >
                             Add Client
                         </div>
                     </div>
@@ -108,6 +114,8 @@ const Client: React.FC = () => {
                     <p className='mt-4 text-xs text-gray-400'>www.ninjaturtles.com</p>
                 </div>
             </div>
+
+            {isModalOpen && <AddClientModal onClose={() => setIsModalOpen(false)} />}
         </div>
     );
 };

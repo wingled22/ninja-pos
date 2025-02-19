@@ -29,8 +29,7 @@ const Client: React.FC = () => {
                         Add Client
                     </div>
                 </div>
-                <div className="p-4 flex-1 flex flex-col h-[87vh] overflow-x-auto">
-
+                <div className="p-4 flex-1 flex flex-col h-[87vh] w-full overflow-x-auto">
                     <div className="flex-1 overflow-y-auto">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
                             {[...Array(30)].map((_, index) => (

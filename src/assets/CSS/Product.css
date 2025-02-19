@@ -19,3 +19,12 @@ p.filter{
 select{
     background-color: #DDDDDD;
 }
+
+button.close-modal{
+    background-color: #e53935;
+}
+
+.bg-blue-600{
+    background-color: #0D6EFD;
+    margin-left: 10px;
+}

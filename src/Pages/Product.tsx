@@ -9,7 +9,7 @@ const Product: React.FC = () => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
   };
-  
+
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => setIsOpen(true);
@@ -59,25 +59,91 @@ const Product: React.FC = () => {
         </form>
       </div>
       <div className="flex-1 flex justify-start relative">
-        <div className="cursor-pointer select-none absolute top-4 left-4 p-4 rounded-lg bg-gray-400 text-white font-semibold flex flex-col items-center justify-center text-xl" onClick={openModal}>
+        <div
+          className="cursor-pointer select-none absolute top-4 left-4 p-4 rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
+          onClick={openModal}
+        >
           Add Product
         </div>
 
         {isOpen && (
-        <div className="fixed inset-0  bg-opacity-95 backdrop-blur-xs flex justify-center items-center z-50">
-          <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Modal Title</h2>
-            <p className="text-gray-700 mb-4">This is a simple modal example.</p>
-            <button
-              onClick={closeModal}
-              className="px-4 py-2 bg-red-500 rounded-lg"
-            >
-              Close Modal
-            </button>
+          <div className="fixed inset-0 bg-opacity-95 backdrop-blur-xs flex justify-center items-center z-50">
+            <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
+              <h2 className="text-2xl font-bold mb-6">Add Product</h2>
+              <form
+                action="your_action_url_here"
+                method="POST"
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Product Name
+                  </label>
+                  <input
+                    type="text"
+                    id="product-name"
+                    name="product_name"
+                    required
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter product name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Category
+                  </label>
+                  <select
+                    id="category"
+                    name="category"
+                    required
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="" disabled selected>
+                      Select a category
+                    </option>
+                    <option value="electronics">Electronics</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="home">Home</option>
+                    <option value="beauty">Beauty</option>
+                    <option value="sports">Sports</option>
+                    <option value="books">Books</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Upload Image
+                  </label>
+                  <input
+                    type="file"
+                    id="product-image"
+                    name="product_image"
+                    required
+                    accept="image/*"
+                    className="mt-1 block w-full text-gray-500 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div className="flex justify-start">
+                  <button
+                    onClick={closeModal}
+                    className="ps-5 pl-4 rounded-lg close-modal text-white"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2 bg-blue-600 text-white font-medium text-sm rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
-      
+        )}
+
         <div className="grid grid-cols-12 pt-18">
           <div className="col-span-12 md:col-span-3 pt-4 px-2">
             <div className="max-w-xs bg-white rounded-xl shadow-md w-60 h-56 border-2 border-solid border-gray-300">
@@ -238,9 +304,6 @@ const Product: React.FC = () => {
               </div>
             </div>
           </div>
-
-
-          
         </div>
       </div>
     </div>

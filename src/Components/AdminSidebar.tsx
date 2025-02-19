@@ -1,38 +1,42 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import Logo from '../assets/Images/NT.png';
 
 const AdminSidebar: React.FC = () => {
     return (
-        <div className="h-full bg-white  flex flex-col items-center">
-            <div className="upper p-4 rounded-xl flex items-center justify-center">
+        <div className="z-1000 h-full w-[5%] bg-white outline outline-gray-300 flex flex-col items-center">
+            <div className="h-[10%] upper p-4 rounded-xl flex items-center justify-center">
                 <NavLink to="/">
-                    <i className="fa-brands fa-shopify text-[50px] text-green-700 transition duration-300 ease-in-out"></i>
+                    <img src={Logo} alt="Logo" />
                 </NavLink>
             </div>
 
-            <div className="middle h-full w-full flex flex-col items-center border border-t-gray-200 border-b-gray-200">
+            <div className="middle h-full w-full flex flex-col items-center border border-t-gray-300 ">
                 <NavLink
                     to="/client"
-                    className={({ isActive }) => `flex flex-1 items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-gray-400 text-white' : ''}`}>
-                    <i className='fa-solid fa-user text-[30px] text-black'></i>
+                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : 'hover:bg-gray-200 hover:text-white'}`}
+                >
+                    <i className='fa-solid fa-user text-18px] text-blue'></i>
                 </NavLink>
 
                 <NavLink
                     to="/product"
-                    className={({ isActive }) => `flex flex-1 items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-gray-400 text-white' : ''}`}>
-                    <i className='fa-solid fa-box-open text-[30px] text-black'></i>
+                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : 'hover:bg-gray-200 hover:text-white'}`}
+                >
+                    <i className='fa-solid fa-box-open text-18px] text-blue'></i>
                 </NavLink>
 
                 <NavLink
                     to="/cart"
-                    className={({ isActive }) => `flex flex-1 items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-gray-400 text-white' : ''}`}>
-                    <i className='fa-solid fa-cart-shopping text-[30px] text-black'></i>
+                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : 'hover:bg-gray-200 hover:text-white'}`}
+                >
+                    <i className='fa-solid fa-cart-shopping text-18px] text-blue'></i>
                 </NavLink>
             </div>
 
             <div className="bottom p-4 gap-5 w-full flex flex-col items-center justify-end border">
-                <i className="fa-regular fa-circle-question text-[30px] text-black cursor-pointer"></i>
-                <i className="fa-solid fa-right-from-bracket text-[30px] text-red-500 rotate-180 cursor-pointer"></i>
+                <i className="fa-regular fa-circle-question text-18px] text-blue-500 cursor-pointer"></i>
+                <i className="fa-solid fa-right-from-bracket text-18px] text-red-500 rotate-180 cursor-pointer"></i>
             </div>
         </div>
     );

@@ -98,7 +98,7 @@ const Client: React.FC = () => {
                     </div>
 
                     <div className="w-full mt-4 space-y-3 px-6">
-                        <div className="flex items-center justify-center cursor-pointer w-full py-2 text-white bg-green-600 rounded-lg shadow-md transition-all duration-300 text-sm font-semibold">
+                        <div className="flex items-center justify-center cursor-pointer w-full py-2 text-white bg-green-600 rounded-lg shadow-md transition-all duration-300 text-sm font-semibold active:scale-[.957] select-none">
                             Edit Profile
                         </div>
                     </div>

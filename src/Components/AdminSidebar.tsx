@@ -14,21 +14,21 @@ const AdminSidebar: React.FC = () => {
             <div className="middle h-full w-full flex flex-col items-center border border-t-gray-300 ">
                 <NavLink
                     to="/client"
-                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : ''}`}
+                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : 'hover:bg-gray-200 hover:text-white'}`}
                 >
                     <i className='fa-solid fa-user text-18px] text-blue'></i>
                 </NavLink>
 
                 <NavLink
                     to="/product"
-                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : ''}`}
+                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : 'hover:bg-gray-200 hover:text-white'}`}
                 >
                     <i className='fa-solid fa-box-open text-18px] text-blue'></i>
                 </NavLink>
 
                 <NavLink
                     to="/cart"
-                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : ''}`}
+                    className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : 'hover:bg-gray-200 hover:text-white'}`}
                 >
                     <i className='fa-solid fa-cart-shopping text-18px] text-blue'></i>
                 </NavLink>

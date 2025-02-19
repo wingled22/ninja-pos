@@ -23,7 +23,7 @@ const Client: React.FC = () => {
                     </div>
 
                     <div
-                        className="cursor-pointer relative m-3 w-[20%] p-2 text-[14px] rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
+                        className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer"
                         onClick={() => setIsModalOpen(true)}
                     >
                         Add Client

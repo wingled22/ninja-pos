@@ -9,7 +9,7 @@ const AdminSidebar: React.FC = () => {
                 <img src={Logo} alt="Logo" />
             </div>
 
-            <div className="middle h-full w-full flex flex-col items-center border">
+            <div className="middle h-full w-full flex flex-col items-center">
                 <NavLink
                     to="/client"
                     className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : 'hover:bg-gray-200 hover:text-white'}`}

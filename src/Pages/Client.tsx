@@ -23,14 +23,13 @@ const Client: React.FC = () => {
                     </div>
 
                     <div
-                        className="cursor-pointer relative m-3 w-[20%] p-2 text-[14px] rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
+                        className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer"
                         onClick={() => setIsModalOpen(true)}
                     >
                         Add Client
                     </div>
                 </div>
-                <div className="p-4 flex-1 flex flex-col h-[87vh] overflow-x-auto">
-
+                <div className="p-4 flex-1 flex flex-col h-[87vh] w-full overflow-x-auto">
                     <div className="flex-1 overflow-y-auto">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
                             {[...Array(30)].map((_, index) => (

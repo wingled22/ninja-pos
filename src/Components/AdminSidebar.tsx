@@ -34,7 +34,7 @@ const AdminSidebar: React.FC = () => {
                 </NavLink>
             </div>
 
-            <div className="bottom p-4 gap-5 w-full flex flex-col items-center justify-end border">
+            <div className="bottom p-4 gap-5 w-full flex flex-col items-center justify-end">
                 <i className="fa-regular fa-circle-question text-18px] text-blue-500 cursor-pointer"></i>
                 <i className="fa-solid fa-right-from-bracket text-18px] text-red-500 rotate-180 cursor-pointer"></i>
             </div>

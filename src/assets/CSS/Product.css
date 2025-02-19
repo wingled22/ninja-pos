@@ -1,0 +1,30 @@
+.fa-solid.fa-trash{
+    color: #e53935;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+img.bearbrand{
+    margin-top: 10px;
+}
+
+button.Edit{
+    background-color: #0D6EFD;
+}
+
+p.filter{
+    font-size: 25px;
+}
+
+select{
+    background-color: #DDDDDD;
+}
+
+button.close-modal{
+    background-color: #e53935;
+}
+
+.bg-blue-600{
+    background-color: #0D6EFD;
+    margin-left: 10px;
+}

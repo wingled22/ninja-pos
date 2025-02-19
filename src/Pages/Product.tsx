@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import AdminNavbar from "../Components/AdminNavbar";
-import "../assets/CSS/Product.css";
 import bearbrand from "../assets/Images/berabrand-1.png";
 
 const Product: React.FC = () => {
@@ -22,45 +21,9 @@ const Product: React.FC = () => {
   return (
     <div className="bg-white flex flex-col flex-1 h-full w-full">
       <AdminNavbar />
-      <div className="absolute top-[10%] right-0 w-[calc(29%-100px)] h-[90vh] bg-[#FEFEFE] border border-gray-300 flex flex-col p-5 z-10">
-        <p className="mx-auto font-bold filter"> Filter </p>
-        <form onSubmit={handleSubmit}>
-          <div className="w-64 relative mt-30">
-            <label className="block text-md text-gray-700 mb-1 font-bold">
-              Select a Product
-            </label>
-            <select
-              id="options"
-              className="w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={selectedOption}
-              onChange={handleChange}
-            >
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-            </select>
-          </div>
-
-          <div className="w-64 relative mt-10">
-            <label className="block text-md font-bold text-gray-700 mb-1">
-              Select a Category
-            </label>
-            <select
-              id="options"
-              className="w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={selectedOption}
-              onChange={handleChange}
-            >
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-            </select>
-          </div>
-        </form>
-      </div>
-      <div className="flex-1 flex justify-start relative">
+      <div className="m-5 flex flex-col relative w-[calc(100%-25%)] h-[87vh] bg-[#FEFEFE] border border-gray-300 overflow-x-auto scrollbar-none">
         <div
-          className="cursor-pointer select-none absolute top-4 left-4 p-4 rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
+          className="cursor-pointer relative m-3 w-[20%] p-2 text-[14px] rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
           onClick={openModal}
         >
           Add Product
@@ -68,8 +31,8 @@ const Product: React.FC = () => {
 
         {isOpen && (
           <div className="fixed inset-0 bg-opacity-95 backdrop-blur-xs flex justify-center items-center z-50">
-            <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
-              <h2 className="text-2xl font-bold mb-6">Add Product</h2>
+            <div className="bg-white w-96 p-6 rounded-lg shadow-lg outline outline-gray-400">
+              <h2 className="text-black text-2xl font-bold mb-6">Add Product</h2>
               <form
                 action="your_action_url_here"
                 method="POST"
@@ -84,7 +47,7 @@ const Product: React.FC = () => {
                     id="product-name"
                     name="product_name"
                     required
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[100%]"
                     placeholder="Enter product name"
                   />
                 </div>
@@ -97,7 +60,7 @@ const Product: React.FC = () => {
                     id="category"
                     name="category"
                     required
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[100%]"
                   >
                     <option value="" disabled selected>
                       Select a category
@@ -121,190 +84,329 @@ const Product: React.FC = () => {
                     name="product_image"
                     required
                     accept="image/*"
-                    className="mt-1 block w-full text-gray-500 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="p-2 w-full text-gray-500 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
 
                 <div className="flex justify-start">
-                  <button
+                  <div
                     onClick={closeModal}
-                    className="ps-5 pl-4 rounded-lg close-modal text-white"
+                    className="cursor-pointer w-[100px] p-2 text-[14px] rounded-lg bg-red-600 text-white font-semibold flex flex-col items-center justify-center text-md"
                   >
                     Close
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-2 bg-blue-600 text-white font-medium text-sm rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+                  </div>
+                  <div
+                    className="cursor-pointer ml-3 w-[100px] p-2 text-[14px] rounded-lg bg-blue-600 text-white font-semibold flex flex-col items-center justify-center text-md"
                   >
                     Submit
-                  </button>
+                  </div>
                 </div>
               </form>
             </div>
           </div>
         )}
 
-        <div className="grid grid-cols-12 pt-18">
-          <div className="col-span-12 md:col-span-3 pt-4 px-2">
-            <div className="max-w-xs bg-white rounded-xl shadow-md w-60 h-56 border-2 border-solid border-gray-300">
-              <div className="flex justify-evenly item-center">
-                <img
-                  className="w-16 h-16 object-contain bearbrand"
-                  src={bearbrand}
-                  alt="Bear Brand Milk"
-                />
-                <div className="px-6 py-3">
-                  <div className="font-bold text-lg mb-2">Bear Brand</div>
-                  <p className="text-gray-500 text-base">Milk 25g</p>
+        <div className="flex item-center justify-center">
+          <div className="grid grid-cols-4 gap-[15px] col-span-4 md:col-span-3 m-3">
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
                 </div>
-                <i className="fa-solid fa-trash"></i>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
               </div>
-              <div className="px-6 pt-4">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Stock: 5x</i>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
                 </span>
               </div>
-              <div className="px-6">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Price: ₱60.00</i>
-                </span>
-              </div>
-              <div className="flex justify-center pt-2">
-                <button className="font-semibold text-white py-2 px-4 rounded-lg Edit w-50 cursor-pointer">
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
                   Edit
-                </button>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="col-span-12 md:col-span-3 pt-4 px-2">
-            <div className="max-w-xs bg-white rounded-xl shadow-md w-60 h-56 border-2 border-solid border-gray-300">
-              <div className="flex justify-evenly item-center">
-                <img
-                  className="w-16 h-16 object-contain bearbrand"
-                  src={bearbrand}
-                  alt="Bear Brand Milk"
-                />
-                <div className="px-6 py-3">
-                  <div className="font-bold text-lg mb-2">Bear Brand</div>
-                  <p className="text-gray-500 text-base">Milk 25g</p>
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
                 </div>
-                <i className="fa-solid fa-trash"></i>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
               </div>
-              <div className="px-6 pt-4">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Stock: 5x</i>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
                 </span>
               </div>
-              <div className="px-6">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Price: ₱60.00</i>
-                </span>
-              </div>
-              <div className="flex justify-center pt-2">
-                <button className="font-semibold text-white py-2 px-4 rounded-lg Edit w-50 cursor-pointer">
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
                   Edit
-                </button>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="col-span-12 md:col-span-3 pt-4 px-2">
-            <div className="max-w-xs bg-white rounded-xl shadow-md w-60 h-56 border-2 border-solid border-gray-300">
-              <div className="flex justify-evenly item-center">
-                <img
-                  className="w-16 h-16 object-contain bearbrand"
-                  src={bearbrand}
-                  alt="Bear Brand Milk"
-                />
-                <div className="px-6 py-3">
-                  <div className="font-bold text-lg mb-2">Bear Brand</div>
-                  <p className="text-gray-500 text-base">Milk 25g</p>
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
                 </div>
-                <i className="fa-solid fa-trash"></i>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
               </div>
-              <div className="px-6 pt-4">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Stock: 5x</i>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
                 </span>
               </div>
-              <div className="px-6">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Price: ₱60.00</i>
-                </span>
-              </div>
-              <div className="flex justify-center pt-2">
-                <button className="font-semibold text-white py-2 px-4 rounded-lg Edit w-50 cursor-pointer">
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
                   Edit
-                </button>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="col-span-12 md:col-span-3 pt-4 px-2">
-            <div className="max-w-xs bg-white rounded-xl shadow-md w-60 h-56 border-2 border-solid border-gray-300">
-              <div className="flex justify-evenly item-center">
-                <img
-                  className="w-16 h-16 object-contain bearbrand"
-                  src={bearbrand}
-                  alt="Bear Brand Milk"
-                />
-                <div className="px-6 py-3">
-                  <div className="font-bold text-lg mb-2">Bear Brand</div>
-                  <p className="text-gray-500 text-base">Milk 25g</p>
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
                 </div>
-                <i className="fa-solid fa-trash"></i>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
               </div>
-              <div className="px-6 pt-4">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Stock: 5x</i>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
                 </span>
               </div>
-              <div className="px-6">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Price: ₱60.00</i>
-                </span>
-              </div>
-              <div className="flex justify-center pt-2">
-                <button className="font-semibold text-white py-2 px-4 rounded-lg Edit w-50 cursor-pointer">
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
                   Edit
-                </button>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="col-span-12 md:col-span-3 pt-4 px-2">
-            <div className="max-w-xs bg-white rounded-xl shadow-md w-60 h-56 border-2 border-solid border-gray-300">
-              <div className="flex justify-evenly item-center">
-                <img
-                  className="w-16 h-16 object-contain bearbrand"
-                  src={bearbrand}
-                  alt="Bear Brand Milk"
-                />
-                <div className="px-6 py-3">
-                  <div className="font-bold text-lg mb-2">Bear Brand</div>
-                  <p className="text-gray-500 text-base">Milk 25g</p>
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
                 </div>
-                <i className="fa-solid fa-trash"></i>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
               </div>
-              <div className="px-6 pt-4">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Stock: 5x</i>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
                 </span>
               </div>
-              <div className="px-6">
-                <span className="py-1 text-lg text-gray-500 mr-2 mb-2">
-                  <i>Price: ₱60.00</i>
-                </span>
-              </div>
-              <div className="flex justify-center pt-2">
-                <button className="font-semibold text-white py-2 px-4 rounded-lg Edit w-50 cursor-pointer">
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
                   Edit
-                </button>
+                </div>
+              </div>
+            </div>
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
+              </div>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
+                </span>
+              </div>
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
+                  Edit
+                </div>
+              </div>
+            </div>
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
+              </div>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
+                </span>
+              </div>
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
+                  Edit
+                </div>
+              </div>
+            </div>
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
+              </div>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
+                </span>
+              </div>
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
+                  Edit
+                </div>
+              </div>
+            </div>
+            <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+              <div className="flex justify-between item-center">
+                <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                  <img
+                    className="w-16 h-16 object-contain bearbrand"
+                    src={bearbrand}
+                    alt="Bear Brand Milk"
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                  <p className="text-gray-500 text-[12px]">Milk 25g</p>
+                </div>
+                <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"></i>
+              </div>
+              <div className="flex flex-col italic">
+                <span className="text-[13px] text-gray-500">
+                  Stock: 5x
+                </span>
+                <span className="text-[13px] text-gray-500">
+                  Price: ₱60.00
+                </span>
+              </div>
+              <div className="flex justify-center">
+                <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
+                  Edit
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div className="absolute top-[10%] right-0 w-[calc(29%-120px)] h-[90vh] bg-[#FEFEFE] border border-gray-300 flex flex-col p-5">
+        <p className="font-bold text-[15px] text-black"> FILTER </p>
+        <form onSubmit={handleSubmit} className="w-[50%]">
+          <div className="w-64 relative mt-30">
+            <label className="block text-md text-gray-700 mb-1 font-bold">
+              Select a Product
+            </label>
+            <select
+              id="options"
+              className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[200px]"
+              value={selectedOption}
+              onChange={handleChange}
+            >
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+          </div>
+
+          <div className="w-64 relative mt-10">
+            <label className="block text-md font-bold text-gray-700 mb-1">
+              Select a Category
+            </label>
+            <select
+              id="options"
+              className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[200px]"
+              value={selectedOption}
+              onChange={handleChange}
+            >
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+          </div>
+        </form>
       </div>
     </div>
   );

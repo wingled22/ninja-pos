@@ -10,7 +10,7 @@ const Client: React.FC = () => {
         <div className="bg-white flex flex-col h-screen w-full overflow-hidden">
             <AdminNavbar />
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="m-5 flex flex-col items-center relative w-[calc(100%-25%)] h-[87vh] bg-[#FEFEFE] border border-gray-300 overflow-x-auto scrollbar-none">
                 {/* LEFT */}
                 <div className="p-4 flex-1 flex flex-col">
                     <div className="w-full flex items-center justify-between mb-4">
@@ -18,13 +18,13 @@ const Client: React.FC = () => {
                             <input
                                 type="text"
                                 placeholder="Search a client"
-                                className="w-full text-black pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm transition-all duration-300"
+                                className="w-full text-black text-[14px] pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm transition-all duration-300"
                             />
                             <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
                         </div>
 
-                        <div 
-                            className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer"
+                        <div
+                            className="cursor-pointer relative m-3 w-[20%] p-2 text-[14px] rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
                             onClick={() => setIsModalOpen(true)}
                         >
                             Add Client
@@ -36,9 +36,7 @@ const Client: React.FC = () => {
                             {[...Array(30)].map((_, index) => (
                                 <div key={index} className="bg-white shadow-md rounded-lg p-4 flex items-center hover:border-green-500 space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300">
                                     {/* Profile Picture */}
-                                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-blue-500 flex-shrink-0">
-                                        <img src={Turtle} alt="Client" className="w-full h-full object-cover" />
-                                    </div>
+                                        <img src={Turtle} alt="Client" className="w-20 h-20 rounded-full border border-blue-500 bg-green-200 p-2" />
 
                                     <div className="flex-1">
                                         <h3 className="text-md font-semibold text-gray-800">Ninja Turtle</h3>
@@ -59,52 +57,56 @@ const Client: React.FC = () => {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* RIGHT */}
-                <div className="h-full w-[20%] hidden lg:flex flex-col items-center bg-white shadow-xl p-6 relative overflow-hidden">
-                    {/* Profile Image */}
-                    <div className="relative w-44 h-44 rounded-full overflow-hidden border-4 border-green-500 shadow-xl transform hover:scale-105 transition-all duration-300">
-                        <img src={Turtle} alt="Client Profile" className="w-full h-full object-cover" />
-                    </div>
 
-                    <h2 className="mt-5 text-2xl font-bold text-gray-900">Ninja Turtle</h2>
-                    <p className="text-gray-500 text-sm font-medium">ninjaturtle@example.com</p>
-
-                    <div className="mt-6 w-full space-y-4 text-left px-6 flex-1">
-                        <p className="flex items-center text-gray-700 text-sm">
-                            <i className="fa-solid fa-calendar-days text-green-500 mr-2"></i>
-                            <span className="font-semibold">Joined:</span> Feb 19, 2025
-                        </p>
-                        <p className="flex items-center text-gray-700 text-sm">
-                            <i className="fa-solid fa-phone text-green-500 mr-2"></i>
-                            <span className="font-semibold">Phone:</span> +1 (555) 123-4567
-                        </p>
-                        <p className="flex items-center text-gray-700 text-sm">
-                            <i className="fa-solid fa-map-marker-alt text-green-500 mr-2"></i>
-                            <span className="font-semibold">Address:</span> 123 Sewer St, NYC
-                        </p>
-                        <p className="flex items-center text-gray-700 text-sm">
-                            <i className="fa-solid fa-id-badge text-green-500 mr-2"></i>
-                            <span className="font-semibold">Membership:</span> Premium
-                        </p>
-                        <p className="flex items-center text-gray-700 text-sm">
-                            <i className="fa-solid fa-car text-green-500 mr-2"></i>
-                            <span className="font-semibold">Total Orders:</span> 15
-                        </p>
-                        <p className="flex items-center text-gray-700 text-sm">
-                            <i className="fa-solid fa-star text-green-500 mr-2"></i>
-                            <span className="font-semibold">Rating:</span> 4.8/5
-                        </p>
-                    </div>
-
-                    <div className="w-full mt-4 space-y-3 px-6">
-                        <div className="flex items-center justify-center cursor-pointer w-full py-2 text-white bg-green-600 rounded-lg shadow-md transition-all duration-300 text-sm font-semibold active:scale-[.957] select-none">
-                            Edit Profile
-                        </div>
-                    </div>
-
-                    <p className='mt-4 text-xs text-gray-400'>www.ninjaturtles.com</p>
+            {/* RIGHT */}
+            <div className="absolute top-[10%] right-0 w-[calc(29%-120px)] h-[90vh] bg-[#FEFEFE] border border-gray-300 flex flex-col p-5">
+                {/* Profile Image */}
+                <div className="flex flex-col items-center my-4">
+                    <img
+                        src={Turtle}
+                        alt="Profile"
+                        className="w-30 h-30 rounded-full border border-blue-500 bg-green-200 p-2"
+                    />
+                    <h3 className="text-center font-semibold text-gray-800 mt-2">
+                        Ninja Turtle
+                    </h3>
                 </div>
+                <div className="mt-6 w-full space-y-4 text-left px-6 flex-1">
+                    <p className="flex items-center text-gray-700 text-sm">
+                        <i className="fa-solid fa-calendar-days text-green-500 mr-2"></i>
+                        <span className="font-semibold ml-1 mr-1">Joined:</span> Feb 19, 2025
+                    </p>
+                    <p className="flex items-center text-gray-700 text-sm">
+                        <i className="fa-solid fa-phone text-green-500 mr-2"></i>
+                        <span className="font-semibold ml-1 mr-1">Phone:</span> 09616186616
+                    </p>
+                    <p className="flex items-center text-gray-700 text-sm">
+                        <i className="fa-solid fa-map-marker-alt text-green-500 mr-2"></i>
+                        <span className="font-semibold ml-1 mr-1">Address:</span> San Vicente St.
+                    </p>
+                    <p className="flex items-center text-gray-700 text-sm">
+                        <i className="fa-solid fa-id-badge text-green-500 mr-2"></i>
+                        <span className="font-semibold ml-1 mr-1">Membership:</span> Premium
+                    </p>
+                    <p className="flex items-center text-gray-700 text-sm">
+                        <i className="fa-solid fa-car text-green-500 mr-2"></i>
+                        <span className="font-semibold ml-1 mr-1">Total Orders:</span> 15
+                    </p>
+                    <p className="flex items-center text-gray-700 text-sm">
+                        <i className="fa-solid fa-star text-green-500 mr-2"></i>
+                        <span className="font-semibold ml-1 mr-1">Rating:</span> 4.8/5
+                    </p>
+                </div>
+
+                <div className="w-full mt-4 space-y-3 px-6">
+                    <div className="flex items-center justify-center cursor-pointer w-full py-2 text-white bg-green-600 rounded-lg shadow-md transition-all duration-300 text-sm font-semibold active:scale-[.957] select-none">
+                        Edit Profile
+                    </div>
+                </div>
+
+                <p className='mt-4 text-xs text-gray-400'>www.ninjaturtles.com</p>
             </div>
 
             {isModalOpen && <AddClientModal onClose={() => setIsModalOpen(false)} />}

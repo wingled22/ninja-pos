@@ -13,7 +13,6 @@ const Client: React.FC = () => {
             <div className="flex flex-1 overflow-hidden">
                 {/* LEFT */}
                 <div className="p-4 flex-1 flex flex-col">
-                    {/* Search & Add */}
                     <div className="w-full flex items-center justify-between mb-4">
                         <div className="relative w-full max-w-lg">
                             <input
@@ -32,7 +31,6 @@ const Client: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Clients Grid */}
                     <div className="flex-1 overflow-y-auto">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
                             {[...Array(30)].map((_, index) => (
@@ -42,14 +40,12 @@ const Client: React.FC = () => {
                                         <img src={Turtle} alt="Client" className="w-full h-full object-cover" />
                                     </div>
 
-                                    {/* Client Info */}
                                     <div className="flex-1">
                                         <h3 className="text-md font-semibold text-gray-800">Ninja Turtle</h3>
                                         <p className="text-xs text-gray-500">ninjaturtle@example.com</p>
                                         <p className="text-xs text-gray-400">Joined: Feb 19, 2025</p>
                                     </div>
 
-                                    {/* Action Buttons */}
                                     <div className="flex flex-col space-y-2">
                                         <div className="text-orange-300 hover:text-orange-400 transition-all duration-300 cursor-pointer">
                                             <i className="fa-solid fa-user-pen text-xl"></i>
@@ -71,11 +67,9 @@ const Client: React.FC = () => {
                         <img src={Turtle} alt="Client Profile" className="w-full h-full object-cover" />
                     </div>
 
-                    {/* Client Name & Email */}
                     <h2 className="mt-5 text-2xl font-bold text-gray-900">Ninja Turtle</h2>
                     <p className="text-gray-500 text-sm font-medium">ninjaturtle@example.com</p>
 
-                    {/* Extra Client Info */}
                     <div className="mt-6 w-full space-y-4 text-left px-6 flex-1">
                         <p className="flex items-center text-gray-700 text-sm">
                             <i className="fa-solid fa-calendar-days text-green-500 mr-2"></i>
@@ -103,14 +97,12 @@ const Client: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Actions */}
                     <div className="w-full mt-4 space-y-3 px-6">
                         <div className="flex items-center justify-center cursor-pointer w-full py-2 text-white bg-green-600 rounded-lg shadow-md transition-all duration-300 text-sm font-semibold">
                             Edit Profile
                         </div>
                     </div>
 
-                    {/* Website Link */}
                     <p className='mt-4 text-xs text-gray-400'>www.ninjaturtles.com</p>
                 </div>
             </div>

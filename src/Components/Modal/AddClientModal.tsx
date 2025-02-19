@@ -15,7 +15,6 @@ const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-md border border-red-500">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-                {/* Close Button */}
                 <div
                     onClick={onClose}
                     className="absolute cursor-pointer top-4 right-4 text-gray-500 hover:text-red-500 transition"
@@ -40,7 +39,6 @@ const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <p className="text-xs text-gray-500 mt-2">Click to upload</p>
                 </div>
 
-                {/* Input Fields */}
                 <div className="space-y-3">
                     <input
                         type="text"
@@ -59,7 +57,6 @@ const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     />
                 </div>
 
-                {/* Submit Button */}
                 <div className="w-full flex items-center justify-center cursor-pointer mt-4 bg-green-600 text-white py-2 rounded-lg shadow-md hover:bg-green-600 active:scale-[.957] select-none transition">
                     Add Client
                 </div>

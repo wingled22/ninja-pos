@@ -1,49 +1,28 @@
-import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import { AppDispatch } from "./utils/store";
-import { useDispatch } from "react-redux";
-import "./App.css";
-import { getProducts } from "./utils/product/productSlice";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import './assets/CSS/App.css';
+import AdminDashboard from "./Pages/AdminDashboard";
+import AdminSidebar from "./Components/AdminSidebar";
+import Client from "./Pages/Client";
+import Product from "./Pages/Product";
+import Cart from "./Pages/Cart";
 
-function App() {
-  const [count, setCount] = useState(0);
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
-
-  // const { products, isSuccess } = useSelector(
-  //   (state: { products: { products: Product[]; isSuccess: boolean } }) =>
-  //     state.products
-  // );
-
-  // console.log(products, isSuccess); // Use the destructured elements
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+const App: React.FC = () => {
+	return (
+		<Router>
+			<div className="flex h-screen w-screen">
+				<AdminSidebar />
+				<div className="flex flex-col flex-1 h-full w-full">
+					<Routes>
+						<Route path="/" element={<AdminDashboard />} />
+                        <Route path="/client" element={<Client />} />
+                        <Route path="/product" element={<Product />} />
+                        <Route path="/cart" element={<Cart />} />
+						<Route path="*" element={<Navigate to="/" />} />
+					</Routes>
+				</div>
+			</div>
+		</Router>
+	);
 }
 
 export default App;

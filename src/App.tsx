@@ -1,28 +1,28 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import './assets/CSS/App.css';
-import AdminDashboard from "./Pages/AdminDashboard";
+import ClientDashboard from "./Pages/ClientDashboard";
 import AdminSidebar from "./Components/AdminSidebar";
 import Client from "./Pages/Client";
 import Product from "./Pages/Product";
 import Cart from "./Pages/Cart";
 
 const App: React.FC = () => {
-	return (
-		<Router>
-			<div className="flex h-screen w-screen">
-				<AdminSidebar />
-				<div className="flex flex-col flex-1 h-full w-full">
-					<Routes>
-						<Route path="/" element={<AdminDashboard />} />
-                        <Route path="/client" element={<Client />} />
-                        <Route path="/product" element={<Product />} />
-                        <Route path="/cart" element={<Cart />} />
-						<Route path="*" element={<Navigate to="/" />} />
-					</Routes>
-				</div>
-			</div>
-		</Router>
-	);
+  return (
+    <Router>
+      <div className="flex h-screen w-screen">
+        <AdminSidebar />
+        <div className="flex flex-col flex-1 h-full w-full">
+          <Routes>
+            <Route path="/" element={<ClientDashboard />} />
+            <Route path="/client" element={<Client />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  );
 }
 
 export default App;

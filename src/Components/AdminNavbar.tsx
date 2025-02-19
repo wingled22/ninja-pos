@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import Logo from '../assets/Images/LOGO.png';
 
 const AdminNavbar: React.FC = () => {
@@ -7,9 +8,11 @@ const AdminNavbar: React.FC = () => {
             <div className='flex flex-1 items-center justify-center'>
                 <img src={Logo} alt="Logo" />
             </div>
-            <div className='flex items-center justify-center rounded-lg border border-gray-300 p-3 cursor-pointer'>
-                <i className="fa-solid fa-arrow-up-right-from-square text-[15px] text-black"></i>
-            </div>
+            <NavLink to="/">
+                <div className='flex items-center justify-center rounded-lg border border-gray-300 p-3 cursor-pointer' title="Go to Client Dashboard">
+                    <i className="fa-solid fa-arrow-up-right-from-square text-[15px] text-black"></i>
+                </div>
+            </NavLink>
         </div>
     );
 }

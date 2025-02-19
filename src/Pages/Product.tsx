@@ -106,7 +106,7 @@ const Product: React.FC = () => {
           </div>
         )}
 
-        <div className="flex item-center justify-center">
+        <div className="flex item-center justify-center h-[72vh] overflow-x-auto">
           <div className="grid grid-cols-4 gap-[15px] col-span-4 md:col-span-3 m-3">
             <div className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
               <div className="flex justify-between item-center">

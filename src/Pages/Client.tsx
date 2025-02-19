@@ -12,31 +12,31 @@ const Client: React.FC = () => {
 
             <div className="m-5 flex flex-col items-center relative w-[calc(100%-25%)] h-[87vh] bg-[#FEFEFE] border border-gray-300 overflow-x-auto scrollbar-none">
                 {/* LEFT */}
-                <div className="p-4 flex-1 flex flex-col">
-                    <div className="w-full flex items-center justify-between mb-4">
-                        <div className="relative w-full max-w-lg">
-                            <input
-                                type="text"
-                                placeholder="Search a client"
-                                className="w-full text-black text-[14px] pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm transition-all duration-300"
-                            />
-                            <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-                        </div>
-
-                        <div
-                            className="cursor-pointer relative m-3 w-[20%] p-2 text-[14px] rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
-                            onClick={() => setIsModalOpen(true)}
-                        >
-                            Add Client
-                        </div>
+                <div className="w-full flex items-center justify-between p-4">
+                    <div className="relative w-full max-w-lg">
+                        <input
+                            type="text"
+                            placeholder="Search a client"
+                            className="w-full text-black text-[14px] pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm transition-all duration-300"
+                        />
+                        <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
                     </div>
+
+                    <div
+                        className="cursor-pointer relative m-3 w-[20%] p-2 text-[14px] rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Add Client
+                    </div>
+                </div>
+                <div className="p-4 flex-1 flex flex-col h-[87vh] overflow-x-auto">
 
                     <div className="flex-1 overflow-y-auto">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
                             {[...Array(30)].map((_, index) => (
                                 <div key={index} className="bg-white shadow-md rounded-lg p-4 flex items-center hover:border-green-500 space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300">
                                     {/* Profile Picture */}
-                                        <img src={Turtle} alt="Client" className="w-20 h-20 rounded-full border border-blue-500 bg-green-200 p-2" />
+                                    <img src={Turtle} alt="Client" className="w-20 h-20 rounded-full border border-blue-500 bg-green-200 p-2" />
 
                                     <div className="flex-1">
                                         <h3 className="text-md font-semibold text-gray-800">Ninja Turtle</h3>

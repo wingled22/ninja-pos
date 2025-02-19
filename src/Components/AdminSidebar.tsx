@@ -11,7 +11,7 @@ const AdminSidebar: React.FC = () => {
                 </NavLink>
             </div>
 
-            <div className="middle h-full w-full flex flex-col items-center border border-t-gray-300 ">
+            <div className="middle h-full w-full flex flex-col items-center border">
                 <NavLink
                     to="/client"
                     className={({ isActive }) => `flex h-[20%] items-center justify-center w-full p-3 transition duration-300 ease-in-out cursor-pointer ${isActive ? 'bg-orange-400 !text-white' : 'hover:bg-gray-200 hover:text-white'}`}

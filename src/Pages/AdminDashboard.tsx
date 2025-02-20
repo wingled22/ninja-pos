@@ -3,16 +3,25 @@ import AdminNavbar from "../Components/AdminNavbar";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../utils/store";
 import { getProducts } from "../utils/product/productSlice";
+import { getClients } from "../utils/client/clientSlice";
 import Product from "../utils/product/IProduct";
-
+import Client from "../utils/client/IClient";
 const AdminDashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  useSelector(
-    (state: { products: { products: Product[]; isSuccess: boolean } }) =>
-      state.products
+  const { products } = useSelector(
+    (state: { products: { products: Product[] } }) => state.products
   );
+
+  const { clients } = useSelector(
+    (state: { clients: { clients: Client[] } }) => state.clients
+  );
+
+  console.log(products);
+  console.log(clients);
+
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getClients());
   }, [dispatch]);
   return (
     <div className="bg-white flex flex-col flex-1 h-full w-full">

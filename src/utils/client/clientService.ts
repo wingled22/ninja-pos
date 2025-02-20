@@ -15,8 +15,19 @@ const getClients = async (): Promise<Client[]> => {
   }
 };
 
+const addClient = async (client: Client): Promise<Client> => {
+  try {
+    const res: AxiosResponse<Client> = await apiClient.post("/Client", client);
+    return res.data;
+  } catch (e: any) {
+    console.log("Something went wrong!", e);
+    throw new Error("Failed to add client:"+e)
+  }
+};
+
 const clientService = {
   getClients,
+  addClient,
 };
 
 export default clientService;

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import clientService from "./clientService";
 import Client from "./IClient";
+import ClientModel from "./IClientModel";
 
 interface ClientState {
   clients: Client[];
@@ -33,6 +34,21 @@ export const getClients = createAsyncThunk(
   }
 );
 
+export const addClient = createAsyncThunk(
+  "client/addClient",
+  async (client: ClientModel, thunkAPI) => {
+    try {
+      return await clientService.addClient(client);
+    } catch (e: any) {
+      const message =
+        (e.response && e.response.data && e.response.data.message) ||
+        e.message ||
+        e.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const clientSlice = createSlice({
   name: "clients",
   initialState,
@@ -46,6 +62,8 @@ export const clientSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      // pagkuha sa mga kliyente
       .addCase(getClients.pending, (state) => {
         state.isLoading = true;
       })
@@ -55,6 +73,21 @@ export const clientSlice = createSlice({
         state.clients = action.payload;
       })
       .addCase(getClients.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+
+      // adding client
+      .addCase(addClient.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addClient.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Success adding client!";
+      })
+      .addCase(addClient.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

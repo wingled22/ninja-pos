@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import Client from "./IClient";
+import ClientModel from "./IClientModel";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:5228/api",
@@ -15,7 +16,7 @@ const getClients = async (): Promise<Client[]> => {
   }
 };
 
-const addClient = async (client: Client): Promise<Client> => {
+const addClient = async (client: ClientModel): Promise<Client> => {
   try {
     const res: AxiosResponse<Client> = await apiClient.post("/Client", client);
     return res.data;

@@ -6,6 +6,8 @@ import AddClientModal from '../Components/Modal/AddClientModal';
 const Client: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    
+
     return (
         <div className="bg-white flex flex-col h-screen w-full overflow-hidden">
             <AdminNavbar />

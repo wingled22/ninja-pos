@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import clientService from "./clientService";
 import Client from "./IClient";
 import ClientModel from "./IClientModel";
+import { AxiosError } from "axios"; 
 
 interface ClientState {
   clients: Client[];
@@ -24,11 +25,14 @@ export const getClients = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       return await clientService.getClients();
-    } catch (e: any) {
-      const message =
-        (e.response && e.response.data && e.response.data.message) ||
-        e.message ||
-        e.toString();
+    } catch (e: unknown) {
+      let message = "An unknown error occurred";
+      if (e instanceof AxiosError) {
+        message =
+          (e.response && e.response.data && e.response.data.message) ||
+          e.message ||
+          e.toString();
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -39,11 +43,14 @@ export const addClient = createAsyncThunk(
   async (client: ClientModel, thunkAPI) => {
     try {
       return await clientService.addClient(client);
-    } catch (e: any) {
-      const message =
-        (e.response && e.response.data && e.response.data.message) ||
-        e.message ||
-        e.toString();
+    } catch (e: unknown) {
+      let message = "An unknown error occurred";
+      if (e instanceof AxiosError) {
+        message =
+          (e.response && e.response.data && e.response.data.message) ||
+          e.message ||
+          e.toString();
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -62,8 +69,7 @@ export const clientSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
-      // pagkuha sa mga kliyente
+      // Fetching clients
       .addCase(getClients.pending, (state) => {
         state.isLoading = true;
       })
@@ -77,8 +83,7 @@ export const clientSlice = createSlice({
         state.isError = true;
         state.message = action.payload as string;
       })
-
-      // adding client
+      // Adding client
       .addCase(addClient.pending, (state) => {
         state.isLoading = true;
       })
@@ -94,5 +99,6 @@ export const clientSlice = createSlice({
       });
   },
 });
+
 export const { reset } = clientSlice.actions;
 export default clientSlice.reducer;

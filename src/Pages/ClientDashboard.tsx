@@ -1,12 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../utils/store";
+import { getProducts } from "../utils/product/productSlice";
 import AdminNavbar from '../Components/AdminNavbar';
 import bearbrand from "../assets/Images/berabrand-1.png";
-import { useState } from "react";
 
 
 const AdminDashboard: React.FC = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const { products } = useSelector(
+        (state: RootState) => state.products
+    );
+
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+    useEffect(() => {
+        dispatch(getProducts());
+    }, [dispatch]);
+
+    const categories = [...new Set(products.map((product) => product.productCategory))];
+    // Filter products based on selected category
+    const filteredProducts = selectedCategory
+        ? products.filter((product) => product.productCategory === selectedCategory)
+        : [];
+
     const [isVisible, setIsVisible] = useState(false);
     const [isCartVisible, setIsCartVisible] = useState(false);
+
+
     return (
         <div className="bg-white flex flex-col flex-1 h-full w-full">
             <AdminNavbar />
@@ -17,21 +38,23 @@ const AdminDashboard: React.FC = () => {
 
                         <div className="max-h-[32vh] overflow-y-auto">
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 gap-4">
-                                {[...Array(30)].map((_, index) => (
-                                    <div key={index} className="bg-white shadow-md rounded-lg p-4 flex items-center hover:border-green-500 space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300">
+                                {categories.map((category, index) => (
+                                    <div key={index} className={`bg-white shadow-md rounded-lg p-4 flex items-center space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300 
+                                        ${selectedCategory === category ? "border-green-500" : "hover:border-green-500"}`}
+                                        onClick={() => setSelectedCategory(category)}>
 
                                         <div className="flex-1">
-                                            <h3 className="text-[13px] font-semibold text-gray-800" onClick={() => setIsVisible(!isVisible)}>Product Category</h3>
+                                            <h3 className="text-[13px] font-semibold text-gray-800" onClick={() => setIsVisible(!isVisible)}>{category}</h3>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        {isVisible && (
+                        {selectedCategory && (
                             <div className="flex item-center justify-center max-h-[50vh] overflow-x-auto">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-                                    {[...Array(30)].map((_, index) => (
-                                        <div key={index} className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
+                                    {filteredProducts.map((product) => (
+                                        <div key={product.productId} className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3">
                                             <div className="flex item-center">
                                                 <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
                                                     <img
@@ -41,7 +64,7 @@ const AdminDashboard: React.FC = () => {
                                                     />
                                                 </div>
                                                 <div className="ml-3 flex flex-col justify-center">
-                                                    <div className="font-bold text-[15px] text-gray-800">Bear Brand</div>
+                                                    <div className="font-bold text-[15px] text-gray-800">{product.productName}</div>
                                                     <p className="text-gray-500 text-[12px]">Milk 25g</p>
                                                 </div>
                                             </div>

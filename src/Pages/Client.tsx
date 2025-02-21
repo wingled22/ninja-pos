@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../utils/store";
-import { getClients } from "../utils/client/clientSlice";
+import { getClients, deleteClient } from "../utils/client/clientSlice";
 import AdminNavbar from "../Components/AdminNavbar";
 import Turtle from "../assets/Images/NT.png";
 import AddClientModal from "../Components/Modal/AddClientModal";
@@ -11,17 +11,34 @@ import DeleteClientModal from "../Components/Modal/DeleteClientModal";
 const Client: React.FC = () => {
     const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
     const [isDeleteClientModalOpen, setIsDeleteClientModalOpen] = useState(false);
+    const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
     const dispatch = useDispatch<AppDispatch>();
-    
+
     const { clients, isLoading, isError, message } = useSelector(
         (state: RootState) => state.clients
     );
-    
+
     useEffect(() => {
         dispatch(getClients());
     }, [dispatch]);
-    
+
     const notify = () => toast.success("Wow so easy!");
+
+    // Function to handle delete click
+    const handleDeleteClick = (clientId: number) => {
+        setSelectedClientId(clientId); 
+        setIsDeleteClientModalOpen(true);
+    };
+
+    // Function to confirm deletion
+    const handleConfirmDelete = async () => {
+        if (selectedClientId !== null) {
+            await dispatch(deleteClient(selectedClientId));
+            dispatch(getClients);
+            dispatch(getClients()); 
+            setIsDeleteClientModalOpen(false);
+        }
+    };
 
     return (
         <div className="bg-white flex flex-col h-screen w-full overflow-hidden">
@@ -64,7 +81,7 @@ const Client: React.FC = () => {
                                         src={Turtle}
                                         alt="Client"
                                         className="w-20 h-20 rounded-full border border-blue-500 bg-green-200 p-2"
-                                    />  
+                                    />
 
                                     <div className="flex-1">
                                         <h3 className="text-md font-semibold text-gray-800">
@@ -79,7 +96,7 @@ const Client: React.FC = () => {
                                         </div>
                                         <div className="text-red-400 hover:text-red-600 transition-all duration-300 cursor-pointer">
                                             <i className="fa-solid fa-trash text-xl"
-                                            onClick={() => {setIsDeleteClientModalOpen(true)}}
+                                                onClick={() => handleDeleteClick(client.clientId as number)}
                                             >
                                             </i>
                                         </div>
@@ -141,7 +158,12 @@ const Client: React.FC = () => {
             </div>
 
             {isAddClientModalOpen && <AddClientModal onClose={() => setIsAddClientModalOpen(false)} />}
-            {isDeleteClientModalOpen && <DeleteClientModal onClose={() => setIsDeleteClientModalOpen(false)} />}
+            {isDeleteClientModalOpen && (
+                <DeleteClientModal
+                    onClose={() => setIsDeleteClientModalOpen(false)}
+                    onConfirm={handleConfirmDelete}
+                />
+            )}
 
             {/* Toater Notifications */}
             <ToastContainer />

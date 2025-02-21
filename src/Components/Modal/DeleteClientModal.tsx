@@ -1,7 +1,7 @@
-const DeleteClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const DeleteClientModal: React.FC<{ onClose: () => void; onConfirm: () => void }> = ({ onClose, onConfirm }) => {
     return (
         <>
-            <div className="z-[1000] fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-md">
+            <div className="z-[1000] fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-sm">
                 <div className="bg-white p-6 rounded-lg shadow-xl relative w-full sm:w-96">
                     <h2 className="text-xl flex items-center justify-start font-semibold text-red-600 mb-4 text-center">
                         Confirm Delete?
@@ -23,7 +23,9 @@ const DeleteClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     </div>
 
                     <div className="flex justify-between gap-2">
-                        <div className="w-full flex items-center justify-center cursor-pointer bg-red-600 text-white p-2 rounded-md hover:bg-red-700 transition active:scale-[.957] select-none">
+                        <div
+                        onClick={onConfirm} 
+                        className="w-full flex items-center justify-center cursor-pointer bg-red-600 text-white p-2 rounded-md hover:bg-red-700 transition active:scale-[.957] select-none">
                             Confirm
                         </div>
                         <div

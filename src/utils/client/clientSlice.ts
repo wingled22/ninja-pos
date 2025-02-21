@@ -56,6 +56,25 @@ export const addClient = createAsyncThunk(
 	}
 );
 
+export const deleteClient = createAsyncThunk(
+	"client/deleteClient",
+	async (clientId: number, thunkAPI) => {
+		try {
+			return await clientService.deleteClient(clientId);
+			return clientId;
+		} catch (e: unknown) {
+			let message = "An unknown error occurred";
+			if (e instanceof AxiosError) {
+				message =
+					(e.response && e.response.data && e.response.data.message) ||
+					e.message ||
+					e.toString();
+			}
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const clientSlice = createSlice({
 	name: "clients",
 	initialState,
@@ -99,9 +118,25 @@ export const clientSlice = createSlice({
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload as string;
-			});
+			})
 
 			// Deleting client
+			.addCase(deleteClient.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(deleteClient.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.clients = state.clients.filter(
+					(client) => client.clientId !== action.payload 
+				);
+				state.message = "Client deleted successfully!";
+			})
+			.addCase(deleteClient.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload as string;
+			});
 	},
 });
 

@@ -1,5 +1,5 @@
 interface Client {
-  clientId: number | null;
+  clientId: number;
   clientName: string;
   clientEmail: string;
 }

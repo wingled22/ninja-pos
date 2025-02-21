@@ -37,9 +37,25 @@ const addClient = async (client: ClientModel): Promise<Client> => {
 	}
 };
 
+const deleteClient = async (clientId: number): Promise<Client | null> => {
+	try {
+		const res: AxiosResponse<Client> = await apiClient.delete(`/Client/${clientId}`);
+		toast.success("Client deleted successfully");
+		return res.data; 
+	} catch (e: unknown) {
+		if (e instanceof AxiosError) {
+			toast.error(`Failed to delete client: ${e.response?.data?.message || e.message}`);
+		} else {
+			toast.error("Unexpected error occurred while deleting client.");
+		}
+		throw e; 
+	}
+};
+
 const clientService = {
 	getClients,
 	addClient,
+	deleteClient,
 };
 
 export default clientService;

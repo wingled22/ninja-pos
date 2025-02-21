@@ -6,6 +6,7 @@ import { addClient } from "../../utils/client/clientSlice";
 import ClientModel from "../../utils/client/IClientModel";
 
 const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+
    const [profilePicture, setProfilePicture] = useState<string | null>(null);
    const dispatch = useDispatch<AppDispatch>();
    const [client, setClient] = useState<ClientModel>({
@@ -30,8 +31,9 @@ const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
          throw new Error();
       }
    };
-
    console.log(client);
+
+   // handle Client's Profile Picture
    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files && event.target.files[0]) {
          const file = event.target.files[0];
@@ -42,7 +44,7 @@ const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
    };
 
    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-md border border-red-500">
+      <div className="z-[1000] fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-md">
          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
             <div
                onClick={onClose}

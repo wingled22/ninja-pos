@@ -100,6 +100,8 @@ export const clientSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload as string;
 			});
+
+			// Deleting client
 	},
 });
 

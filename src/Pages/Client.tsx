@@ -6,9 +6,11 @@ import AdminNavbar from "../Components/AdminNavbar";
 import Turtle from "../assets/Images/NT.png";
 import AddClientModal from "../Components/Modal/AddClientModal";
 import { ToastContainer, toast } from 'react-toastify';
+import DeleteClientModal from "../Components/Modal/DeleteClientModal";
 
 const Client: React.FC = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
+    const [isDeleteClientModalOpen, setIsDeleteClientModalOpen] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
     
     const { clients, isLoading, isError, message } = useSelector(
@@ -40,7 +42,7 @@ const Client: React.FC = () => {
 
                     <div
                         className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => setIsAddClientModalOpen(true)}
                     >
                         Add Client
                     </div>
@@ -76,7 +78,10 @@ const Client: React.FC = () => {
                                             <i className="fa-solid fa-user-pen text-xl"></i>
                                         </div>
                                         <div className="text-red-400 hover:text-red-600 transition-all duration-300 cursor-pointer">
-                                            <i className="fa-solid fa-trash text-xl"></i>
+                                            <i className="fa-solid fa-trash text-xl"
+                                            onClick={() => {setIsDeleteClientModalOpen(true)}}
+                                            >
+                                            </i>
                                         </div>
                                     </div>
                                 </div>
@@ -135,7 +140,10 @@ const Client: React.FC = () => {
                 <p className='mt-4 text-xs text-gray-400'>www.ninjaturtles.com</p>
             </div>
 
-            {isModalOpen && <AddClientModal onClose={() => setIsModalOpen(false)} />}
+            {isAddClientModalOpen && <AddClientModal onClose={() => setIsAddClientModalOpen(false)} />}
+            {isDeleteClientModalOpen && <DeleteClientModal onClose={() => setIsDeleteClientModalOpen(false)} />}
+
+            {/* Toater Notifications */}
             <ToastContainer />
         </div>
     );

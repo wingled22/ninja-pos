@@ -1,4 +1,9 @@
-const DeleteClientModal: React.FC<{ onClose: () => void; onConfirm: () => void }> = ({ onClose, onConfirm }) => {
+const DeleteClientModal: React.FC<{ 
+    onClose: () => void; 
+    onConfirm: () => void;
+    clientName: string | undefined;
+    clientEmail: string | undefined;
+}> = ({ onClose, onConfirm, clientName, clientEmail }) => {
     return (
         <>
             <div className="z-[1000] fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-sm">
@@ -14,11 +19,11 @@ const DeleteClientModal: React.FC<{ onClose: () => void; onConfirm: () => void }
                     <div className="text-gray-400 mb-6">
                         <p className="text-lg">
                             <i className="fa-solid fa-user mr-2"></i>
-                            Name
+                            <span className="text-gray-400 text-sm capitalize">{clientName || "unknown name"}</span>
                         </p>
                         <p className="text-lg">
                             <i className="fa-solid fa-envelope mr-2"></i>
-                            Email
+                            <span className="text-gray-400 text-sm">{clientEmail || "unknown name"}</span>
                         </p>
                     </div>
 

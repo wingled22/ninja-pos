@@ -24,12 +24,13 @@ const Client: React.FC = () => {
 
     const notify = () => toast.success("Wow so easy!");
 
+    
     // Function to handle delete click
     const handleDeleteClick = (clientId: number) => {
         setSelectedClientId(clientId); 
         setIsDeleteClientModalOpen(true);
     };
-
+    
     // Function to confirm deletion
     const handleConfirmDelete = async () => {
         if (selectedClientId !== null) {
@@ -39,6 +40,9 @@ const Client: React.FC = () => {
             setIsDeleteClientModalOpen(false);
         }
     };
+    
+    // get the selected client's details
+    const selectedClient = clients.find((client) => client.clientId === selectedClientId);
 
     return (
         <div className="bg-white flex flex-col h-screen w-full overflow-hidden">
@@ -162,10 +166,12 @@ const Client: React.FC = () => {
                 <DeleteClientModal
                     onClose={() => setIsDeleteClientModalOpen(false)}
                     onConfirm={handleConfirmDelete}
+                    clientName={selectedClient?.clientName}
+                    clientEmail={selectedClient?.clientEmail}
                 />
             )}
 
-            {/* Toater Notifications */}
+            {/* Toaster Notifications */}
             <ToastContainer />
         </div>
     );

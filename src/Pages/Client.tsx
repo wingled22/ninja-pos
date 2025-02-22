@@ -7,6 +7,7 @@ import Turtle from "../assets/Images/NT.png";
 import AddClientModal from "../Components/Modal/AddClientModal";
 import { ToastContainer, toast } from 'react-toastify';
 import DeleteClientModal from "../Components/Modal/DeleteClientModal";
+import NCF from "../assets/Images/NoClientsFound.png";
 
 const Client: React.FC = () => {
     const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
@@ -24,24 +25,24 @@ const Client: React.FC = () => {
 
     const notify = () => toast.success("Wow so easy!");
 
-    
+
     // Function to handle delete click
     const handleDeleteClick = (clientId: number) => {
-        setSelectedClientId(clientId); 
+        setSelectedClientId(clientId);
         setIsDeleteClientModalOpen(true);
     };
-    
+
     // Function to confirm deletion
     const handleConfirmDelete = async () => {
         if (selectedClientId !== null) {
             await dispatch(deleteClient(selectedClientId));
             dispatch(getClients);
-            dispatch(getClients()); 
+            dispatch(getClients());
             setIsDeleteClientModalOpen(false);
         }
     };
-    
-    // get the selected client's details
+
+    // get the selected client's details upon deletion
     const selectedClient = clients.find((client) => client.clientId === selectedClientId);
 
     return (
@@ -74,6 +75,10 @@ const Client: React.FC = () => {
                         <p className="text-center text-gray-500">Loading clients...</p>
                     ) : isError ? (
                         <p className="text-center text-red-500">{message}</p>
+                    ) : clients.length === 0 ? (
+                        <div className="h-full w-full flex items-center justify-center text-center text-gray-500 text-lg font-semibold mt-4">
+                            <img src={NCF} alt="Maybe a green turtle holding a sign that says No Clients Found" />
+                        </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
                             {clients.map((client) => (
@@ -86,14 +91,12 @@ const Client: React.FC = () => {
                                         alt="Client"
                                         className="w-20 h-20 rounded-full border border-blue-500 bg-green-200 p-2"
                                     />
-
                                     <div className="flex-1">
                                         <h3 className="text-md font-semibold text-gray-800">
                                             {client.clientName}
                                         </h3>
                                         <p className="text-xs text-gray-500">{client.clientEmail}</p>
                                     </div>
-
                                     <div className="flex flex-col space-y-2">
                                         <div className="text-orange-300 hover:text-orange-400 transition-all duration-300 cursor-pointer">
                                             <i className="fa-solid fa-user-pen text-xl"></i>

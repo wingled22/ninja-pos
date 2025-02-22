@@ -30,6 +30,7 @@ const Client: React.FC = () => {
     const handleDeleteClick = (clientId: number) => {
         setSelectedClientId(clientId);
         setIsDeleteClientModalOpen(true);
+        toast.dismiss();
     };
 
     // Function to confirm deletion
@@ -64,7 +65,10 @@ const Client: React.FC = () => {
 
                     <div
                         className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer"
-                        onClick={() => setIsAddClientModalOpen(true)}
+                        onClick={() => {
+                            setIsAddClientModalOpen(true);
+                            toast.dismiss();
+                        }}
                     >
                         Add Client
                     </div>

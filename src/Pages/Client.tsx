@@ -72,12 +72,14 @@ const Client: React.FC = () => {
 
                 <div className="p-4 flex-1 flex flex-col h-[87vh] w-full overflow-x-auto">
                     {isLoading ? (
-                        <p className="text-center text-gray-500">Loading clients...</p>
+                        <div className="h-full w-full flex items-center justify-center text-center text-gray-500">
+                            Loading clients...
+                        </div>
                     ) : isError ? (
                         <p className="text-center text-red-500">{message}</p>
                     ) : clients.length === 0 ? (
                         <div className="h-full w-full flex items-center justify-center text-center text-gray-500 text-lg font-semibold mt-4">
-                            <img src={NCF} alt="Maybe a green turtle holding a sign that says No Clients Found" />
+                            <img draggable="false" src={NCF} alt="Maybe a green turtle holding a sign that says No Clients Found" />
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">

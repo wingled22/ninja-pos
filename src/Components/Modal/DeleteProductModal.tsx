@@ -31,9 +31,12 @@ const DeleteProductModal: React.FC<DeleteProductModalProps> = ({
   return (
     <div className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Delete Product</h2>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">
+          Delete Product
+        </h2>
         <p className="text-gray-600 mb-6">
-          Are you sure you want to delete <strong>{product.productName}</strong>?
+          Are you sure you want to delete <strong>{product.productName}</strong>
+          ?
         </p>
         <div className="flex justify-end space-x-4">
           <button

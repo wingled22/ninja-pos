@@ -6,11 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import DeleteProductModal from "../Components/Modal/DeleteProductModal";
 import { getProducts } from "../utils/product/productSlice";
 import { AppDispatch, RootState } from "../utils/store";
+import AddProductModal from "../Components/Modal/AddProductModal";
 
 const Product: React.FC = () => {
-  const { products } = useSelector(
-    (state: RootState) => state.products
-  );
+  const { products } = useSelector((state: RootState) => state.products);
 
   const [isDeleteModalOpen, setDeleteIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Products | null>(null);
@@ -41,11 +40,17 @@ const Product: React.FC = () => {
     await dispatch(getProducts()); // Refresh product list
   };
 
+  const handleAddComplete = async () => {
+    setAddIsModalOpen(false); // Close modal
+    await dispatch(getProducts()); // Refresh product list
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
   };
+  const [isAddModalOpen, setAddIsModalOpen] = useState(false);
 
-    const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log("Selected option:", selectedOption);
   };
@@ -55,9 +60,12 @@ const Product: React.FC = () => {
       <AdminNavbar />
       <div className="m-5 flex flex-col relative w-[calc(100%-25%)] h-[87vh] bg-[#FEFEFE] border border-gray-300 overflow-x-auto scrollbar-none">
         <div
-          className="cursor-pointer relative m-3 w-[20%] p-2 text-[14px] rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md">
+          className="cursor-pointer relative m-3 w-[20%] p-2 text-[14px] rounded-lg bg-green-600 text-white font-semibold flex flex-col items-center justify-center text-md"
+          onClick={() => setAddIsModalOpen(true)}
+        >
           Add Product
         </div>
+
         <div className="flex item-center justify-center h-[72vh] overflow-x-auto">
           {isLoading ? (
             <div className="flex justify-center items-center w-full h-full">
@@ -84,7 +92,10 @@ const Product: React.FC = () => {
                       </div>
                       <p className="text-gray-500 text-[12px]">Milk 25g</p>
                     </div>
-                    <i className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer" onClick={() => openModal(product)}></i>
+                    <i
+                      className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"
+                      onClick={() => openModal(product)}
+                    ></i>
                   </div>
                   <div className="flex flex-col italic">
                     <span className="text-[13px] text-gray-500">Stock: 5x</span>
@@ -93,9 +104,7 @@ const Product: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex justify-center">
-                    <div
-                      className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                    >
+                    <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
                       Edit
                     </div>
                   </div>
@@ -141,6 +150,13 @@ const Product: React.FC = () => {
           </div>
         </form>
       </div>
+
+      {isAddModalOpen && (
+        <AddProductModal
+          onClose={() => setAddIsModalOpen(false)}
+          onAddComplete={handleAddComplete}
+        />
+      )}
       {isDeleteModalOpen && selectedProduct && (
         <DeleteProductModal
           product={selectedProduct}

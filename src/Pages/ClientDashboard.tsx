@@ -13,7 +13,7 @@ import Product from "../utils/product/IProduct";
 import OrderModel from "../utils/order/IOrderModel";
 
 
-const AdminDashboard: React.FC = () => {
+const ClientDashboard: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product & ProductSku | null>(null);
     const [quantity, setQuantity] = useState(1);
@@ -258,4 +258,4 @@ const AdminDashboard: React.FC = () => {
     );
 }
 
-export default AdminDashboard;
+export default ClientDashboard;

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import orderService from "./orderService";
 import Order from "./IOrder";
+import OrderModel from "./IOrderModel";
 
 interface OrderState {
   orders: Order[];
@@ -33,6 +34,21 @@ export const getOrders = createAsyncThunk(
   }
 );
 
+export const createOrder = createAsyncThunk(
+  "order/createOrder",
+  async (orderData: OrderModel[], thunkAPI) => {
+    try {
+      return await orderService.createOrder(orderData);
+    } catch (e: any) {
+      const message =
+        (e.response && e.response.data && e.response.data.message) ||
+        e.message ||
+        e.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const orderSlice = createSlice({
   name: "orders",
   initialState,
@@ -46,6 +62,7 @@ export const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    //getOrder
       .addCase(getOrders.pending, (state) => {
         state.isLoading = true;
       })
@@ -55,6 +72,21 @@ export const orderSlice = createSlice({
         state.orders = action.payload;
       })
       .addCase(getOrders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+
+      //createOrder
+      .addCase(createOrder.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createOrder.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Success adding order!";
+      })
+      .addCase(createOrder.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

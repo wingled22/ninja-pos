@@ -8,7 +8,7 @@ const AdminNavbar: React.FC = () => {
             <div className='flex flex-1 items-center justify-center'>
                 <img src={Logo} alt="Logo" />
             </div>
-            <NavLink to="/">
+            <NavLink to="/clientdashboard">
                 <div className='flex items-center justify-center rounded-lg border border-gray-300 p-3 cursor-pointer' title="Go to Client Dashboard">
                     <i className="fa-solid fa-arrow-up-right-from-square text-[15px] text-black"></i>
                 </div>

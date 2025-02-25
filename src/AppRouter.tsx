@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import AdminSidebar from "./Components/AdminSidebar";
 import AdminDashboard from "./Pages/AdminDashboard";
+import ClientDashboard from "./Pages/ClientDashboard";
 import Client from "./Pages/Client";
 import Product from "./Pages/Product";
 import Cart from "./Pages/Cart";
@@ -21,6 +22,7 @@ const AppRouter = () => {
             <Route path="/client" element={<Client />} />
             <Route path="/product" element={<Product />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/clientdashboard" element={<ClientDashboard />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

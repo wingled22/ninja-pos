@@ -1,10 +1,10 @@
 export default interface ProductSku {
-    productSkuId: number;
+    productSKUId: number;
     productId: number;
     name: string;
     codeName: string;
     price: number;
     quantity: number;
     unit: string;
-  }
-  
+}
+

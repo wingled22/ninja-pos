@@ -1,29 +1,44 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import orderService from "./orderService";
-import Order from "./IOrder";
-import OrderModel from "./IOrderModel";
+import productSkuService from "./productSkuService";
+import ProductSku from "./IProductSku";
 
-interface OrderState {
-  orders: Order[];
+interface ProductSkuState {
+  productSku: ProductSku[];
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
   message: string;
 }
 
-const initialState: OrderState = {
-  orders: [],
+const initialState: ProductSkuState = {
+  productSku: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-export const getOrders = createAsyncThunk(
-  "order/getOrders",
+// get product Sku by product Id
+export const getSkuByProductId = createAsyncThunk(
+  "productSku/getSkuByProductId",
+  async (productId: number, thunkAPI) => {
+    try {
+      return await productSkuService.getSkuByProductId(productId);
+    } catch (e: any) {
+      const message =
+        (e.response && e.response.data && e.response.data.message) ||
+        e.message ||
+        e.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+// get productSku
+export const getProductSku = createAsyncThunk(
+  "productSku/getProductSku",
   async (_, thunkAPI) => {
     try {
-      return await orderService.getOrders();
+      return await productSkuService.getProductSku();
     } catch (e: any) {
       const message =
         (e.response && e.response.data && e.response.data.message) ||
@@ -34,23 +49,8 @@ export const getOrders = createAsyncThunk(
   }
 );
 
-export const createOrder = createAsyncThunk(
-  "order/createOrder",
-  async (orderData: OrderModel[], thunkAPI) => {
-    try {
-      return await orderService.createOrder(orderData);
-    } catch (e: any) {
-      const message =
-        (e.response && e.response.data && e.response.data.message) ||
-        e.message ||
-        e.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const orderSlice = createSlice({
-  name: "orders",
+export const productSkuSlice = createSlice({
+  name: "productSku",
   initialState,
   reducers: {
     reset: (state) => {
@@ -62,36 +62,34 @@ export const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    //getOrder
-      .addCase(getOrders.pending, (state) => {
+      .addCase(getSkuByProductId.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getOrders.fulfilled, (state, action) => {
+      .addCase(getSkuByProductId.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.orders = action.payload;
+        state.productSku = action.payload;
       })
-      .addCase(getOrders.rejected, (state, action) => {
+      .addCase(getSkuByProductId.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
       })
 
-      //createOrder
-      .addCase(createOrder.pending, (state) => {
+      .addCase(getProductSku.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createOrder.fulfilled, (state) => {
+      .addCase(getProductSku.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.message = "Success adding order!";
+        state.productSku = action.payload;
       })
-      .addCase(createOrder.rejected, (state, action) => {
+      .addCase(getProductSku.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
       });
   },
 });
-export const { reset } = orderSlice.actions;
-export default orderSlice.reducer;
+export const { reset } = productSkuSlice.actions;
+export default productSkuSlice.reducer;

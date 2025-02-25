@@ -8,9 +8,11 @@ import { getProducts } from "../utils/product/productSlice";
 import { AppDispatch, RootState } from "../utils/store";
 import AddProductModal from "../Components/Modal/AddProductModal";
 import UpdateProductModal from "../Components/Modal/UpdateProductModal";
+import DeactivateProductModal from "../Components/Modal/DeactivateProductModal";
 
 const Product: React.FC = () => {
   const { products } = useSelector((state: RootState) => state.products);
+  const [isDeactivateModalOpen, setDeactivateIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteIsModalOpen] = useState(false);
   const [isAddModalOpen, setAddIsModalOpen] = useState(false);
@@ -48,15 +50,25 @@ const Product: React.FC = () => {
     await dispatch(getProducts()); // Refresh product list
   };
 
-  
+  const handleDeactivateComplete = async () => {
+    setDeactivateIsModalOpen(false); // Close modal
+    await dispatch(getProducts()); // Refresh product list
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
   };
 
-   const openModal = (product: Products) => {
+  const openModal = (product: Products) => {
     setSelectedProduct(product);
     setAddIsModalOpen(true);
   };
+
+  const openDeactivateModal = (product: Products) => {
+    setSelectedProduct(product);
+    setDeactivateIsModalOpen(true);
+  };
+
   const openDeleteModal = (product: Products) => {
     setSelectedProduct(product);
     setDeleteIsModalOpen(true);
@@ -114,18 +126,49 @@ const Product: React.FC = () => {
                     ></i>
                   </div>
                   <div className="flex flex-col italic">
-                    <span className="text-[13px] text-gray-500">Stock: 5x</span>
+                    <div className="flex justify-between">
+                      <span className="text-[13px] text-gray-500">
+                        Stock: 5x
+                      </span>
+                      <span
+                        className={`text-[13px] text-white rounded-lg w-[40%] text-center ${
+                          product.productStatus === "Activated"
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                        }`}
+                      >
+                        {product.productStatus}
+                      </span>
+                    </div>
                     <span className="text-[13px] text-gray-500">
                       Price: ₱60.00
                     </span>
                   </div>
                   <div className="flex justify-center">
-                    <div
-                      className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                      onClick={() => openUpdateModal(product)}
-                    >
-                      Edit
-                    </div>
+                    {/* Show only the "Edit" button if the product is deactivated */}
+                    {product.productStatus === "Deactivated" ? (
+                      <div
+                        className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                        onClick={() => openUpdateModal(product)}
+                      >
+                        Edit
+                      </div>
+                    ) : (
+                      <>
+                        <div
+                          className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                          onClick={() => openUpdateModal(product)}
+                        >
+                          Edit
+                        </div>
+                        <div
+                          className="text-[14px] border-1 border-white font-semibold text-center text-white bg-red-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-red-600 hover:border-gray-700"
+                          onClick={() => openDeactivateModal(product)}
+                        >
+                          Deactivate
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
@@ -187,6 +230,13 @@ const Product: React.FC = () => {
           product={selectedProduct}
           onClose={() => setUpdateIsModalOpen(false)}
           onUpdateComplete={handleUpdateComplete} // Pass callback
+        />
+      )}
+      {isDeactivateModalOpen && selectedProduct && (
+        <DeactivateProductModal
+          product={selectedProduct}
+          onClose={() => setDeactivateIsModalOpen(false)}
+          onUpdateComplete={handleDeactivateComplete} // Pass callback
         />
       )}
     </div>

@@ -75,6 +75,24 @@ export const deleteClient = createAsyncThunk(
 	}
 );
 
+export const updateClient = createAsyncThunk(
+	"client/updateClient",
+	async ({ clientId, clientData }: { clientId: number; clientData: ClientModel }, thunkAPI) => {
+		try {
+			return await clientService.updateClient(clientId, clientData);
+		} catch (e: unknown) {
+			let message = "An unknown error occurred";
+			if (e instanceof AxiosError) {
+				message =
+					(e.response && e.response.data && e.response.data.message) ||
+					e.message ||
+					e.toString();
+			}
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const clientSlice = createSlice({
 	name: "clients",
 	initialState,
@@ -128,11 +146,31 @@ export const clientSlice = createSlice({
 				state.isLoading = false;
 				state.isSuccess = true;
 				state.clients = state.clients.filter(
-					(client) => client.clientId !== action.payload 
+					(client) => client.clientId !== action.payload
 				);
 				state.message = "Client deleted successfully!";
 			})
 			.addCase(deleteClient.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload as string;
+			})
+
+			// Update client
+			.addCase(updateClient.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateClient.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				if (action.payload) {
+					state.clients = state.clients.map(client =>
+						client.clientId === action.payload.clientId ? action.payload : client
+					);
+				}
+				state.message = "Client updated successfully!";
+			})			
+			.addCase(updateClient.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload as string;

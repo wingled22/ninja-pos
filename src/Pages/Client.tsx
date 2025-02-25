@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../utils/store";
 import { getClients, deleteClient } from "../utils/client/clientSlice";
-import AdminNavbar from "../Components/AdminNavbar";
-import Turtle from "../assets/Images/NT.png";
-import AddClientModal from "../Components/Modal/AddClientModal";
 import { ToastContainer, toast } from 'react-toastify';
+import AdminNavbar from "../Components/AdminNavbar";
+import AddClientModal from "../Components/Modal/AddClientModal";
 import DeleteClientModal from "../Components/Modal/DeleteClientModal";
+import UpdateClientModal from "../Components/Modal/UpdateClientModal";
+import Turtle from "../assets/Images/NT.png";
 import NCF from "../assets/Images/NoClientsFound.png";
 
 const Client: React.FC = () => {
     const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
     const [isDeleteClientModalOpen, setIsDeleteClientModalOpen] = useState(false);
+    const [isUpdateClientModalOpen, setIsUpdateClientModalOpen] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -25,7 +27,6 @@ const Client: React.FC = () => {
 
     const notify = () => toast.success("Wow so easy!");
 
-
     // Function to handle delete click
     const handleDeleteClick = (clientId: number) => {
         setSelectedClientId(clientId);
@@ -37,10 +38,16 @@ const Client: React.FC = () => {
     const handleConfirmDelete = async () => {
         if (selectedClientId !== null) {
             await dispatch(deleteClient(selectedClientId));
-            dispatch(getClients);
             dispatch(getClients());
             setIsDeleteClientModalOpen(false);
         }
+    };
+
+    // Handle update click
+    const handleUpdateClick = (clientId: number) => {
+        setSelectedClientId(clientId);
+        setIsUpdateClientModalOpen(true);
+        toast.dismiss();
     };
 
     // get the selected client's details upon deletion
@@ -65,10 +72,7 @@ const Client: React.FC = () => {
 
                     <div
                         className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer"
-                        onClick={() => {
-                            setIsAddClientModalOpen(true);
-                            toast.dismiss();
-                        }}
+                        onClick={() => { setIsAddClientModalOpen(true); toast.dismiss(); }}
                     >
                         Add Client
                     </div>
@@ -105,7 +109,10 @@ const Client: React.FC = () => {
                                     </div>
                                     <div className="flex flex-col space-y-2">
                                         <div className="text-orange-300 hover:text-orange-400 transition-all duration-300 cursor-pointer">
-                                            <i className="fa-solid fa-user-pen text-xl"></i>
+                                            <i className="fa-solid fa-user-pen text-xl"
+                                                onClick={() => handleUpdateClick(client.clientId as number)}
+                                            >
+                                            </i>
                                         </div>
                                         <div className="text-red-400 hover:text-red-600 transition-all duration-300 cursor-pointer">
                                             <i className="fa-solid fa-trash text-xl"
@@ -171,6 +178,7 @@ const Client: React.FC = () => {
             </div>
 
             {isAddClientModalOpen && <AddClientModal onClose={() => setIsAddClientModalOpen(false)} />}
+
             {isDeleteClientModalOpen && (
                 <DeleteClientModal
                     onClose={() => setIsDeleteClientModalOpen(false)}
@@ -179,6 +187,17 @@ const Client: React.FC = () => {
                     clientEmail={selectedClient?.clientEmail}
                 />
             )}
+
+            {isUpdateClientModalOpen && selectedClient && (
+                <UpdateClientModal
+                    onClose={() => setIsUpdateClientModalOpen(false)}
+                    // onConfirm={handleConfirmUpdate}
+                    clientId={selectedClient.clientId}
+                    clientName={selectedClient.clientName}
+                    clientEmail={selectedClient.clientEmail}
+                />
+            )}
+            
 
             {/* Toaster Notifications */}
             <ToastContainer />

@@ -42,6 +42,20 @@ const deleteProduct = async (Id: number): Promise<Product | null> => {
 	}
 };
 
+const deactivateProduct = async (Id: number): Promise<Product | null> => {
+	try {
+		const res: AxiosResponse<Product> = await apiClient.put(`/DeactivateProduct/${Id}`);
+		toast.success("Client deleted successfully");
+		return res.data; 
+	} catch (e: unknown) {
+		if (e instanceof AxiosError) {
+			toast.error(`Failed to delete product: ${e.response?.data?.message || e.message}`);
+		} else {
+			toast.error("Unexpected error occurred while deleting product.");
+		}
+		throw e; 
+	}
+};
 
 const updateProducts = async (
   productId: number,
@@ -72,6 +86,7 @@ const productService = {
   addProducts,
   deleteProduct,
   updateProducts,
+  deactivateProduct,
 };
 
 export default productService;

@@ -6,7 +6,10 @@ const AdminSidebar: React.FC = () => {
     return (
         <div className="z-1000 h-full w-[5%] bg-white outline outline-gray-300 flex flex-col items-center">
             <div className="h-[10%] upper p-4 rounded-xl flex items-center justify-center">
-                <img src={Logo} alt="Logo" />
+
+                <NavLink to="/">
+                    <img src={Logo} alt="Logo" />
+                </NavLink>
             </div>
 
             <div className="middle h-full w-full flex flex-col items-center">

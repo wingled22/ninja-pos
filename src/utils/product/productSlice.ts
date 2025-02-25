@@ -53,10 +53,29 @@ export const addProducts = createAsyncThunk(
 );
 
 export const deleteProduct = createAsyncThunk(
-	"client/deleteClient",
+	"client/deleteProduct",
 	async (Id: number, thunkAPI) => {
 		try {
 			return await productService.deleteProduct(Id);
+			return Id;
+		} catch (e: unknown) {
+			let message = "An unknown error occurred";
+			if (e instanceof AxiosError) {
+				message =
+					(e.response && e.response.data && e.response.data.message) ||
+					e.message ||
+					e.toString();
+			}
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const deactivateProduct = createAsyncThunk(
+	"client/deactivateProduct",
+	async (Id: number, thunkAPI) => {
+		try {
+			return await productService.deactivateProduct(Id);
 			return Id;
 		} catch (e: unknown) {
 			let message = "An unknown error occurred";
@@ -157,6 +176,20 @@ export const productSlice = createSlice({
         state.message = "Successfully updated product";
       })
       .addCase(updateProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+
+      .addCase(deactivateProduct.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deactivateProduct.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Successfully updated product";
+      })
+      .addCase(deactivateProduct.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

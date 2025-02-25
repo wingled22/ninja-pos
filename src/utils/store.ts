@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import productSkuReducer from "./productSku/productSkuSlice";
 import productReducer from "./product/productSlice";
 import clientReducer from "./client/clientSlice";
+import orderDetailReducer from "./orderDetail/orderDetailSlice";
 import orderReducer from "./order/orderSlice";
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     productSku: productSkuReducer,
     clients: clientReducer,
     products: productReducer,
+    orderDetails: orderDetailReducer,
     orders: orderReducer,
   },
 });

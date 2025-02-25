@@ -1,5 +1,5 @@
 export default interface ProductSku {
-    productSkuId: number;
+    productSKUId: number;
     productId: number;
     name: string;
     codeName: string;
@@ -7,3 +7,4 @@ export default interface ProductSku {
     quantity: number;
     unit: string;
 }
+

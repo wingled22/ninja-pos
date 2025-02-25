@@ -12,11 +12,22 @@ const getSkuByProductId = async (productId: number): Promise<ProductSku[]> => {
   } catch (e) {
     console.log("An error occurred", e);
     return [];
+  };
+};
+
+const getProductSku = async (): Promise<ProductSku[]> => {
+  try {
+    const res: AxiosResponse<ProductSku[]> = await apiClient.get("/GetProductSku");
+    return res.data;
+  } catch (e) {
+    console.log("An error occured", e);
+    return [];
   }
 };
 
 const productSkuService = {
   getSkuByProductId,
+  getProductSku,
 };
 
 export default productSkuService;

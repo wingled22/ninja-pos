@@ -41,14 +41,35 @@ const deleteClient = async (clientId: number): Promise<Client | null> => {
 	try {
 		const res: AxiosResponse<Client> = await apiClient.delete(`/Client/${clientId}`);
 		toast.success("Client deleted successfully");
-		return res.data; 
+		return res.data;
 	} catch (e: unknown) {
 		if (e instanceof AxiosError) {
 			toast.error(`Failed to delete client: ${e.response?.data?.message || e.message}`);
 		} else {
 			toast.error("Unexpected error occurred while deleting client.");
 		}
-		throw e; 
+		throw e;
+	}
+};
+
+const updateClient = async (clientId: number, updatedData: Partial<Client>): Promise<Client> => {
+	try {
+		const params = new URLSearchParams({
+			clientName: updatedData.clientName || "",
+			clientEmail: updatedData.clientEmail || ""
+		}).toString();
+
+		const res: AxiosResponse<Client> = await apiClient.put(`/Client/${clientId}?${params}`, updatedData);
+
+		toast.success("Client updated successfully");
+		return res.data;
+	} catch (e: unknown) {
+		if (e instanceof AxiosError) {
+			toast.error(`Failed to update client: ${e.response?.data?.message || e.message}`);
+		} else {
+			toast.error("Unexpected error occurred while updating client.");
+		}
+		throw e;
 	}
 };
 
@@ -56,6 +77,7 @@ const clientService = {
 	getClients,
 	addClient,
 	deleteClient,
+	updateClient,
 };
 
 export default clientService;

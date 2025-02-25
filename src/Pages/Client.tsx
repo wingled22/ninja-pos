@@ -1,19 +1,56 @@
-import React, { useState } from 'react';
-import AdminNavbar from '../Components/AdminNavbar';
-import Turtle from '../assets/Images/NT.png';
-import AddClientModal from '../Components/Modal/AddClientModal';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../utils/store";
+import { getClients, deleteClient } from "../utils/client/clientSlice";
+import AdminNavbar from "../Components/AdminNavbar";
+import Turtle from "../assets/Images/NT.png";
+import AddClientModal from "../Components/Modal/AddClientModal";
+import { ToastContainer, toast } from 'react-toastify';
+import DeleteClientModal from "../Components/Modal/DeleteClientModal";
+import NCF from "../assets/Images/NoClientsFound.png";
 
 const Client: React.FC = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
+    const [isDeleteClientModalOpen, setIsDeleteClientModalOpen] = useState(false);
+    const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
 
-    
+    const { clients, isLoading, isError, message } = useSelector(
+        (state: RootState) => state.clients
+    );
+
+    useEffect(() => {
+        dispatch(getClients());
+    }, [dispatch]);
+
+    const notify = () => toast.success("Wow so easy!");
+
+
+    // Function to handle delete click
+    const handleDeleteClick = (clientId: number) => {
+        setSelectedClientId(clientId);
+        setIsDeleteClientModalOpen(true);
+        toast.dismiss();
+    };
+
+    // Function to confirm deletion
+    const handleConfirmDelete = async () => {
+        if (selectedClientId !== null) {
+            await dispatch(deleteClient(selectedClientId));
+            dispatch(getClients);
+            dispatch(getClients());
+            setIsDeleteClientModalOpen(false);
+        }
+    };
+
+    // get the selected client's details upon deletion
+    const selectedClient = clients.find((client) => client.clientId === selectedClientId);
 
     return (
         <div className="bg-white flex flex-col h-screen w-full overflow-hidden">
             <AdminNavbar />
 
             <div className="m-5 flex flex-col items-center relative w-[calc(100%-25%)] h-[87vh] bg-[#FEFEFE] border border-gray-300 overflow-x-auto scrollbar-none">
-                {/* LEFT */}
                 <div className="w-full flex items-center justify-between p-4">
                     <div className="relative w-full max-w-lg">
                         <input
@@ -21,45 +58,68 @@ const Client: React.FC = () => {
                             placeholder="Search a client"
                             className="w-full text-black text-[14px] pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm transition-all duration-300"
                         />
-                        <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                        <i
+                            onClick={notify}
+                            className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
                     </div>
 
                     <div
                         className="px-6 py-3 ml-4 rounded-xl text-white bg-green-600 font-semibold shadow-md active:scale-95 cursor-pointer"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                            setIsAddClientModalOpen(true);
+                            toast.dismiss();
+                        }}
                     >
                         Add Client
                     </div>
                 </div>
+
                 <div className="p-4 flex-1 flex flex-col h-[87vh] w-full overflow-x-auto">
-                    <div className="flex-1 overflow-y-auto">
+                    {isLoading ? (
+                        <div className="h-full w-full flex items-center justify-center text-center text-gray-500">
+                            Loading clients...
+                        </div>
+                    ) : isError ? (
+                        <p className="text-center text-red-500">{message}</p>
+                    ) : clients.length === 0 ? (
+                        <div className="h-full w-full flex items-center justify-center text-center text-gray-500 text-lg font-semibold mt-4">
+                            <img draggable="false" src={NCF} alt="Maybe a green turtle holding a sign that says No Clients Found" />
+                        </div>
+                    ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
-                            {[...Array(30)].map((_, index) => (
-                                <div key={index} className="bg-white shadow-md rounded-lg p-4 flex items-center hover:border-green-500 space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300">
-                                    {/* Profile Picture */}
-                                    <img src={Turtle} alt="Client" className="w-20 h-20 rounded-full border border-blue-500 bg-green-200 p-2" />
-
+                            {clients.map((client) => (
+                                <div
+                                    key={client.clientId}
+                                    className="bg-white shadow-md rounded-lg p-4 flex items-center hover:border-green-500 space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300"
+                                >
+                                    <img
+                                        src={Turtle}
+                                        alt="Client"
+                                        className="w-20 h-20 rounded-full border border-blue-500 bg-green-200 p-2"
+                                    />
                                     <div className="flex-1">
-                                        <h3 className="text-md font-semibold text-gray-800">Ninja Turtle</h3>
-                                        <p className="text-xs text-gray-500">ninjaturtle@example.com</p>
-                                        <p className="text-xs text-gray-400">Joined: Feb 19, 2025</p>
+                                        <h3 className="text-md font-semibold text-gray-800">
+                                            {client.clientName}
+                                        </h3>
+                                        <p className="text-xs text-gray-500">{client.clientEmail}</p>
                                     </div>
-
                                     <div className="flex flex-col space-y-2">
                                         <div className="text-orange-300 hover:text-orange-400 transition-all duration-300 cursor-pointer">
                                             <i className="fa-solid fa-user-pen text-xl"></i>
                                         </div>
                                         <div className="text-red-400 hover:text-red-600 transition-all duration-300 cursor-pointer">
-                                            <i className="fa-solid fa-trash text-xl"></i>
+                                            <i className="fa-solid fa-trash text-xl"
+                                                onClick={() => handleDeleteClick(client.clientId as number)}
+                                            >
+                                            </i>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
-
 
             {/* RIGHT */}
             <div className="absolute top-[10%] right-0 w-[calc(29%-120px)] h-[90vh] bg-[#FEFEFE] border border-gray-300 flex flex-col p-5">
@@ -110,7 +170,18 @@ const Client: React.FC = () => {
                 <p className='mt-4 text-xs text-gray-400'>www.ninjaturtles.com</p>
             </div>
 
-            {isModalOpen && <AddClientModal onClose={() => setIsModalOpen(false)} />}
+            {isAddClientModalOpen && <AddClientModal onClose={() => setIsAddClientModalOpen(false)} />}
+            {isDeleteClientModalOpen && (
+                <DeleteClientModal
+                    onClose={() => setIsDeleteClientModalOpen(false)}
+                    onConfirm={handleConfirmDelete}
+                    clientName={selectedClient?.clientName}
+                    clientEmail={selectedClient?.clientEmail}
+                />
+            )}
+
+            {/* Toaster Notifications */}
+            <ToastContainer />
         </div>
     );
 };

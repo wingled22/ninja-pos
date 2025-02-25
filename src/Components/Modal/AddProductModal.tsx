@@ -2,47 +2,45 @@ import { useState } from "react";
 import Product from "../../utils/product/IProduct";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../utils/store";
-import { updateProducts } from "../../utils/product/productSlice";
+import { addProducts } from "../../utils/product/productSlice";
+import ProductModel from "../../utils/product/IProductModel";
 
-interface DeleteProductModalProps {
+interface AddProductModal {
   onClose: () => void;
-  product: Product;
-  onUpdateComplete: () => void;
+  onAddComplete: () => void;
 }
 
-const UpdateProductModal: React.FC<{
-  onClose: () => void;
-  product: Product;
-  onUpdateComplete: () => void; // New prop
-}> = ({ onClose, product: initialProduct, onUpdateComplete }) => {
+const AddProductModal: React.FC<AddProductModal> = ({
+  onClose,
+  onAddComplete,
+}) => {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const [product, setProduct] = useState<Product>(initialProduct);
+  const [product, setProduct] = useState<ProductModel>({
+    productName: "",
+    productCategory: "",
+  });
 
   const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setProduct((prev) => ({
-      ...prev,
+    setProduct((prevCreds) => ({
+      ...prevCreds,
       [name]: value,
     }));
   };
 
-  const UpdateProductHandler = async (): Promise<void> => {
+  const addProductHandler = async (): Promise<void> => {
     try {
-      await dispatch(
-        updateProducts({
-          productId: product.productId,
-          productName: product.productName,
-          productCategory: product.productCategory,
-        })
-      );
-      onUpdateComplete(); // Call the callback
-      onClose(); // Close the modal
+      await dispatch(addProducts(product));
+      onAddComplete();
     } catch (e) {
-      console.error("An error occurred:", e);
+      console.log("An error occured", e);
+    } finally {
+      onClose(); // Close modal
     }
   };
 
+  console.log(product);
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
@@ -55,9 +53,8 @@ const UpdateProductModal: React.FC<{
   return (
     <div className="fixed inset-0 bg-opacity-95 backdrop-blur-xs flex justify-center items-center z-50">
       <div className="bg-white w-96 p-6 rounded-lg shadow-lg outline outline-gray-400">
-        <h2 className="text-black text-2xl font-bold mb-6">Update Product</h2>
-        <form className="space-y-4">
-          <input type="hidden" name="productId" value={product.productId} />
+        <h2 className="text-black text-2xl font-bold mb-6">Add Product</h2>
+        <form action="your_action_url_here" method="POST" className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Product Name
@@ -73,6 +70,7 @@ const UpdateProductModal: React.FC<{
               placeholder="Enter product name"
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Product Category
@@ -85,9 +83,10 @@ const UpdateProductModal: React.FC<{
               onChange={handleProductChange}
               required
               className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[100%]"
-              placeholder="Enter product category"
+              placeholder="Enter product name"
             />
           </div>
+
           <div className="flex justify-start">
             <div
               onClick={onClose}
@@ -96,10 +95,10 @@ const UpdateProductModal: React.FC<{
               Close
             </div>
             <div
-              onClick={UpdateProductHandler}
               className="cursor-pointer ml-3 w-[100px] p-2 text-[14px] rounded-lg bg-blue-600 text-white font-semibold flex flex-col items-center justify-center text-md"
+              onClick={addProductHandler}
             >
-              Update
+              Add product
             </div>
           </div>
         </form>
@@ -108,5 +107,4 @@ const UpdateProductModal: React.FC<{
   );
 };
 
-export default UpdateProductModal;
-
+export default AddProductModal;

@@ -7,3 +7,4 @@ export default interface ProductSku {
     quantity: number;
     unit: string;
 }
+

@@ -7,11 +7,14 @@ import DeleteProductModal from "../Components/Modal/DeleteProductModal";
 import { getProducts } from "../utils/product/productSlice";
 import { AppDispatch, RootState } from "../utils/store";
 import AddProductModal from "../Components/Modal/AddProductModal";
+import UpdateProductModal from "../Components/Modal/UpdateProductModal";
 
 const Product: React.FC = () => {
   const { products } = useSelector((state: RootState) => state.products);
-
+  const [isUpdateModalOpen, setUpdateIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteIsModalOpen] = useState(false);
+  const [isAddModalOpen, setAddIsModalOpen] = useState(false);
+
   const [selectedProduct, setSelectedProduct] = useState<Products | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string>("");
@@ -30,9 +33,9 @@ const Product: React.FC = () => {
     fetchProducts();
   }, [dispatch]);
 
-  const openModal = (product: Products) => {
-    setSelectedProduct(product);
-    setDeleteIsModalOpen(true);
+  const handleAddComplete = async () => {
+    setAddIsModalOpen(false); // Close modal
+    await dispatch(getProducts()); // Refresh product list
   };
 
   const handleDeleteComplete = async () => {
@@ -40,15 +43,29 @@ const Product: React.FC = () => {
     await dispatch(getProducts()); // Refresh product list
   };
 
-  const handleAddComplete = async () => {
-    setAddIsModalOpen(false); // Close modal
+  const handleUpdateComplete = async () => {
+    setUpdateIsModalOpen(false); // Close modal
     await dispatch(getProducts()); // Refresh product list
   };
 
+  
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
   };
-  const [isAddModalOpen, setAddIsModalOpen] = useState(false);
+
+   const openModal = (product: Products) => {
+    setSelectedProduct(product);
+    setAddIsModalOpen(true);
+  };
+  const openDeleteModal = (product: Products) => {
+    setSelectedProduct(product);
+    setDeleteIsModalOpen(true);
+  };
+
+  const openUpdateModal = (product: Products) => {
+    setSelectedProduct(product);
+    setUpdateIsModalOpen(true);
+  };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -65,7 +82,6 @@ const Product: React.FC = () => {
         >
           Add Product
         </div>
-
         <div className="flex item-center justify-center h-[72vh] overflow-x-auto">
           {isLoading ? (
             <div className="flex justify-center items-center w-full h-full">
@@ -94,7 +110,7 @@ const Product: React.FC = () => {
                     </div>
                     <i
                       className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"
-                      onClick={() => openModal(product)}
+                      onClick={() => openDeleteModal(product)}
                     ></i>
                   </div>
                   <div className="flex flex-col italic">
@@ -104,7 +120,10 @@ const Product: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex justify-center">
-                    <div className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700">
+                    <div
+                      className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[90%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                      onClick={() => openUpdateModal(product)}
+                    >
                       Edit
                     </div>
                   </div>
@@ -150,7 +169,6 @@ const Product: React.FC = () => {
           </div>
         </form>
       </div>
-
       {isAddModalOpen && (
         <AddProductModal
           onClose={() => setAddIsModalOpen(false)}
@@ -162,6 +180,13 @@ const Product: React.FC = () => {
           product={selectedProduct}
           onClose={() => setDeleteIsModalOpen(false)}
           onUpdateComplete={handleDeleteComplete} // Pass callback
+        />
+      )}
+      {isUpdateModalOpen && selectedProduct && (
+        <UpdateProductModal
+          product={selectedProduct}
+          onClose={() => setUpdateIsModalOpen(false)}
+          onUpdateComplete={handleUpdateComplete} // Pass callback
         />
       )}
     </div>

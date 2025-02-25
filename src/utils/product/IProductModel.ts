@@ -3,4 +3,3 @@ interface ProductModel {
     productCategory: string;
   }
   export default ProductModel;
-  

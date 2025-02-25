@@ -39,13 +39,12 @@ const DeleteProductModal: React.FC<DeleteProductModalProps> = ({
           ?
         </p>
         <div className="flex justify-end space-x-4">
-          <button
-            type="button"
+          <div
             onClick={onClose}
-            className="w-24 p-2 bg-gray-300 text-gray-700 rounded-md hover:bg-red-400"
+            className="cursor-pointer w-[100px] p-2 text-[14px] rounded-lg bg-red-600 text-white font-semibold flex flex-col items-center justify-center text-md"
           >
             Cancel
-          </button>
+          </div>
           <button
             type="button"
             onClick={handleDelete}

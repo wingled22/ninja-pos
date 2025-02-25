@@ -7,7 +7,7 @@ import { AppDispatch } from "../utils/store";
 import { getProducts } from "../utils/product/productSlice";
 import { getClients } from "../utils/client/clientSlice";
 import { getOrders } from "../utils/order/orderSlice";
-import Product from "../utils/product/IProduct";
+// import Product from "../utils/product/IProduct";
 // import Client from "../utils/client/IClient";
 
 const AdminDashboard: React.FC = () => {

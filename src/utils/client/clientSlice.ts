@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 
 interface ClientState {
 	clients: Client[];
+	filteredClients: Client[];
 	isError: boolean;
 	isSuccess: boolean;
 	isLoading: boolean;
@@ -14,6 +15,7 @@ interface ClientState {
 
 const initialState: ClientState = {
 	clients: [],
+	filteredClients: [],
 	isError: false,
 	isSuccess: false,
 	isLoading: false,
@@ -103,6 +105,17 @@ export const clientSlice = createSlice({
 			state.isError = false;
 			state.message = "";
 		},
+		filterClients: (state, action) => {
+			const searchTerm = action.payload.toLowerCase();
+			if (searchTerm === "") {
+				state.filteredClients = state.clients;
+			} else {
+				state.filteredClients = state.clients.filter(client =>
+					client.clientName.toLowerCase().includes(searchTerm) ||
+					client.clientEmail.toLowerCase().includes(searchTerm)
+				);
+			}
+		}
 	},
 	extraReducers: (builder) => {
 		builder
@@ -115,6 +128,7 @@ export const clientSlice = createSlice({
 				state.isLoading = false;
 				state.isSuccess = true;
 				state.clients = action.payload;
+				state.filteredClients = action.payload;
 			})
 			.addCase(getClients.rejected, (state, action) => {
 				state.isLoading = false;
@@ -169,7 +183,7 @@ export const clientSlice = createSlice({
 					);
 				}
 				state.message = "Client updated successfully!";
-			})			
+			})
 			.addCase(updateClient.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
@@ -178,5 +192,5 @@ export const clientSlice = createSlice({
 	},
 });
 
-export const { reset } = clientSlice.actions;
+export const { reset, filterClients } = clientSlice.actions;
 export default clientSlice.reducer;

@@ -19,11 +19,11 @@ const initialState: ProductSkuState = {
 };
 
 // get product Sku by product Id
-export const getSkuByProductId = createAsyncThunk(
-  "productSku/getSkuByProductId",
-  async (productId: number, thunkAPI) => {
+export const getSkuById = createAsyncThunk(
+  "productSku/getSkuById",
+  async (productSkuId: number, thunkAPI) => {
     try {
-      return await productSkuService.getSkuByProductId(productId);
+      return await productSkuService.getSkuById(productSkuId);
     } catch (e: any) {
       const message =
         (e.response && e.response.data && e.response.data.message) ||
@@ -62,15 +62,15 @@ export const productSkuSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getSkuByProductId.pending, (state) => {
+      .addCase(getSkuById.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getSkuByProductId.fulfilled, (state, action) => {
+      .addCase(getSkuById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.productSku = action.payload;
       })
-      .addCase(getSkuByProductId.rejected, (state, action) => {
+      .addCase(getSkuById.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

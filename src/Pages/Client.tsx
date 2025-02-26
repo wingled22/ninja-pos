@@ -64,8 +64,6 @@ const Client: React.FC = () => {
 
             <div className="m-5 flex flex-col items-center relative w-[calc(100%-25%)] h-[87vh] bg-[#FEFEFE] border border-gray-300 overflow-x-auto scrollbar-none">
                 <div className="w-full flex items-center justify-between p-4">
-
-                    {/* Integrate Search Specific Client here and make some API calls */}
                     <div className="relative w-full max-w-lg">
                         <input
                             type="text"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../utils/store";
-import { getClients, deleteClient } from "../utils/client/clientSlice";
+import { getClients, deleteClient, filterClients } from "../utils/client/clientSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import AdminNavbar from "../Components/AdminNavbar";
 import AddClientModal from "../Components/Modal/AddClientModal";
@@ -15,15 +15,20 @@ const Client: React.FC = () => {
     const [isDeleteClientModalOpen, setIsDeleteClientModalOpen] = useState(false);
     const [isUpdateClientModalOpen, setIsUpdateClientModalOpen] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
     const dispatch = useDispatch<AppDispatch>();
 
-    const { clients, isLoading, isError, message } = useSelector(
+    const { clients, filteredClients, isLoading, isError, message } = useSelector(
         (state: RootState) => state.clients
     );
 
     useEffect(() => {
         dispatch(getClients());
     }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(filterClients(searchTerm));
+    }, [searchTerm, dispatch]);
 
     const notify = () => toast.success("Wow so easy!");
 
@@ -59,11 +64,15 @@ const Client: React.FC = () => {
 
             <div className="m-5 flex flex-col items-center relative w-[calc(100%-25%)] h-[87vh] bg-[#FEFEFE] border border-gray-300 overflow-x-auto scrollbar-none">
                 <div className="w-full flex items-center justify-between p-4">
+
+                    {/* Integrate Search Specific Client here and make some API calls */}
                     <div className="relative w-full max-w-lg">
                         <input
                             type="text"
                             placeholder="Search a client"
                             className="w-full text-black text-[14px] pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm transition-all duration-300"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                         <i
                             onClick={notify}
@@ -85,13 +94,13 @@ const Client: React.FC = () => {
                         </div>
                     ) : isError ? (
                         <p className="text-center text-red-500">{message}</p>
-                    ) : clients.length === 0 ? (
+                    ) : filteredClients.length === 0 ? (
                         <div className="h-full w-full flex items-center justify-center text-center text-gray-500 text-lg font-semibold mt-4">
                             <img draggable="false" src={NCF} alt="Maybe a green turtle holding a sign that says No Clients Found" />
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
-                            {clients.map((client) => (
+                            {filteredClients.map((client) => (
                                 <div
                                     key={client.clientId}
                                     className="bg-white shadow-md rounded-lg p-4 flex items-center hover:border-green-500 space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300"
@@ -197,7 +206,7 @@ const Client: React.FC = () => {
                     clientEmail={selectedClient.clientEmail}
                 />
             )}
-            
+
 
             {/* Toaster Notifications */}
             <ToastContainer />

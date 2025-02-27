@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../utils/store";
 import { createProductSKU } from "../../utils/productSku/productSkuSlice";
@@ -55,29 +55,34 @@ const CreateProductSkuModal: React.FC<{
   useEffect(() => {
     if (productSku.name) {
       const words = productSku.name.trim().split(/\s+/); // Split the input by spaces
-  
+
       // Extract the first letters of words that are not numeric or end with "g"
       const letters = words
         .filter((word) => !/^\d+g$/i.test(word) && isNaN(Number(word))) // Exclude numeric-like words and "10g"
         .map((word) => word.charAt(0).toUpperCase()) // Get the first letter of each remaining word
         .join(""); // Join letters
-  
+
       // Extract only the numeric portion from the entire name
       const numbers = productSku.name.match(/\d+/)?.[0] || ""; // Match numeric sequence or empty string
-  
+
       // Combine the letters and numbers
       const generatedCodeName = `${letters}${numbers}`;
       setProductSku((prev) => ({ ...prev, codeName: generatedCodeName }));
     }
   }, [productSku.name]);
-  
+
   return (
     <div className="fixed inset-0 bg-opacity-95 backdrop-blur-xs flex justify-center items-center z-50">
       <div className="bg-white w-96 p-6 rounded-lg shadow-lg outline outline-gray-400">
         <h2 className="text-black text-2xl font-bold mb-6">Add Product SKU</h2>
         <form className="space-y-4">
           <div>
-          <input type="text" name="productId" value={productSku.productId} />
+            <input
+              type="text"
+              name="productId"
+              value={productSku.productId}
+              className="border text-black"
+            />
             <label className="block text-sm font-medium text-gray-700">
               SKU Name
             </label>
@@ -152,7 +157,6 @@ const CreateProductSkuModal: React.FC<{
               placeholder="Enter unit (e.g., pcs, kg)"
             />
           </div>
-
 
           <div className="flex justify-start mt-4">
             <div

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import ProductSku from "./IProductSku";
+import ProductSkuModel from "./IProductSkuModel";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:5228/ProductSKU",
@@ -25,9 +26,20 @@ const getProductSku = async (): Promise<ProductSku[]> => {
   }
 };
 
+const createProductSKU = async (productSKU: ProductSkuModel): Promise<ProductSku> => {
+	try {
+	  const res: AxiosResponse<ProductSku> = await apiClient.post(`/CreateSKU?ProductId=${productSKU.productId}&Name=${productSKU.name}&CodeName=${productSKU.codeName}&Price=${productSKU.price}&Quantity=${productSKU.quantity}&Unit=${productSKU.unit}`, productSKU);
+	  return res.data;
+	} catch (e: any) {
+	  console.log("Something went wrong!", e);
+	  throw new Error("Failed to add product:"+e)
+	}
+  };
+
 const productSkuService = {
   getSkuByProductId,
   getProductSku,
+  createProductSKU,
 };
 
 export default productSkuService;

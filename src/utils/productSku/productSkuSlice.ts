@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import productSkuService from "./productSkuService";
 import ProductSku from "./IProductSku";
+import ProductSkuModel from "./IProductSkuModel";
 
 interface ProductSkuState {
   productSku: ProductSku[];
@@ -49,6 +50,21 @@ export const getProductSku = createAsyncThunk(
   }
 );
 
+export const createProductSKU = createAsyncThunk(
+  "product/addProducts",
+  async (productSKU: ProductSkuModel, thunkAPI) => {
+    try {
+      return await productSkuService.createProductSKU(productSKU);
+    } catch (e: any) {
+      const message =
+        (e.response && e.response.data && e.response.data.message) ||
+        e.message ||
+        e.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const productSkuSlice = createSlice({
   name: "productSku",
   initialState,
@@ -85,6 +101,20 @@ export const productSkuSlice = createSlice({
         state.productSku = action.payload;
       })
       .addCase(getProductSku.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+      
+      .addCase(createProductSKU.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createProductSKU.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Created ProductSKU";
+      })
+      .addCase(createProductSKU.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

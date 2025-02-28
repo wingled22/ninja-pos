@@ -18,43 +18,51 @@ const getProducts = async (): Promise<Product[]> => {
 };
 
 const addProducts = async (product: ProductModel): Promise<Product> => {
-	try {
-	  const res: AxiosResponse<Product> = await apiClient.post("", product);
-	  return res.data;
-	} catch (e: any) {
-	  console.log("Something went wrong!", e);
-	  throw new Error("Failed to add product:"+e)
-	}
-  };
+  try {
+    const res: AxiosResponse<Product> = await apiClient.post("", product);
+    return res.data;
+  } catch (e: any) {
+    console.log("Something went wrong!", e);
+    throw new Error("Failed to add product:" + e);
+  }
+};
 
 const deleteProduct = async (Id: number): Promise<Product | null> => {
-	try {
-		const res: AxiosResponse<Product> = await apiClient.delete(`/DeleteProduct/${Id}`);
-		toast.success("Client deleted successfully");
-		return res.data; 
-	} catch (e: unknown) {
-		if (e instanceof AxiosError) {
-			toast.error(`Failed to delete product: ${e.response?.data?.message || e.message}`);
-		} else {
-			toast.error("Unexpected error occurred while deleting product.");
-		}
-		throw e; 
-	}
+  try {
+    const res: AxiosResponse<Product> = await apiClient.delete(
+      `/DeleteProduct/${Id}`
+    );
+    toast.success("Client deleted successfully");
+    return res.data;
+  } catch (e: unknown) {
+    if (e instanceof AxiosError) {
+      toast.error(
+        `Failed to delete product: ${e.response?.data?.message || e.message}`
+      );
+    } else {
+      toast.error("Unexpected error occurred while deleting product.");
+    }
+    throw e;
+  }
 };
 
 const deactivateProduct = async (Id: number): Promise<Product | null> => {
-	try {
-		const res: AxiosResponse<Product> = await apiClient.put(`/DeactivateProduct/${Id}`);
-		toast.success("Client deleted successfully");
-		return res.data; 
-	} catch (e: unknown) {
-		if (e instanceof AxiosError) {
-			toast.error(`Failed to delete product: ${e.response?.data?.message || e.message}`);
-		} else {
-			toast.error("Unexpected error occurred while deleting product.");
-		}
-		throw e; 
-	}
+  try {
+    const res: AxiosResponse<Product> = await apiClient.put(
+      `/DeactivateProduct/${Id}`
+    );
+    toast.success("Client deleted successfully");
+    return res.data;
+  } catch (e: unknown) {
+    if (e instanceof AxiosError) {
+      toast.error(
+        `Failed to delete product: ${e.response?.data?.message || e.message}`
+      );
+    } else {
+      toast.error("Unexpected error occurred while deleting product.");
+    }
+    throw e;
+  }
 };
 
 const updateProducts = async (
@@ -74,12 +82,11 @@ const updateProducts = async (
     return res.data;
   } catch (e: any) {
     console.error("Something went wrong!", e.response?.data || e.message);
-    throw new Error("Failed to update product: " + (e.response?.data?.message || e.message));
+    throw new Error(
+      "Failed to update product: " + (e.response?.data?.message || e.message)
+    );
   }
 };
-
-
-
 
 const productService = {
   getProducts,

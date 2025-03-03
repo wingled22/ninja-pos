@@ -2,17 +2,20 @@ import React, { useState, useEffect } from "react";
 import AdminNavbar from "../Components/AdminNavbar";
 import bearbrand from "../assets/Images/berabrand-1.png";
 import Products from "../utils/product/IProduct";
+import ProductSkus from "../utils/productSku/IProductSku";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteProductModal from "../Components/Modal/DeleteProductModal";
 import { getProducts } from "../utils/product/productSlice";
+import { getProductSku } from "../utils/productSku/productSkuSlice";
 import { AppDispatch, RootState } from "../utils/store";
 import AddProductModal from "../Components/Modal/AddProductModal";
 import UpdateProductModal from "../Components/Modal/UpdateProductModal";
 import DeactivateProductModal from "../Components/Modal/DeactivateProductModal";
-import CreateProductSkuModal from "../Components/Modal/CreateProductSkuModal"
+import CreateProductSkuModal from "../Components/Modal/CreateProductSkuModal";
 
 const Product: React.FC = () => {
   const { products } = useSelector((state: RootState) => state.products);
+  const { productSku } = useSelector((state: RootState) => state.productSku);
   const [isDeactivateModalOpen, setDeactivateIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteIsModalOpen] = useState(false);
@@ -26,15 +29,16 @@ const Product: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProductsAndSKUs = async () => {
       setIsLoading(true);
       try {
         await dispatch(getProducts());
+        await dispatch(getProductSku()); // Fetch SKU data
       } finally {
         setIsLoading(false);
       }
     };
-    fetchProducts();
+    fetchProductsAndSKUs();
   }, [dispatch]);
 
   const handleAddComplete = async () => {
@@ -128,18 +132,21 @@ const Product: React.FC = () => {
                       />
                     </div>
                     <div className="flex flex-col justify-center">
-                      <div
-                        className="font-bold text-[15px] text-gray-800 cursor-pointer"
-                        onClick={() => openProductSKUModal(product)}
-                      >
+                      <div className="font-bold text-[15px] text-gray-800">
                         {product.productName}
                       </div>
                       <p className="text-gray-500 text-[12px]">Milk 25g</p>
                     </div>
-                    <i
-                      className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"
-                      onClick={() => openDeleteModal(product)}
-                    ></i>
+                    <div>
+                      <i
+                        className="fa-solid fa-pen-to-square text-[14px] text-blue-500 cursor-pointer"
+                        onClick={() => openUpdateModal(product)}
+                      ></i>
+                      <i
+                        className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"
+                        onClick={() => openDeleteModal(product)}
+                      ></i>
+                    </div>
                   </div>
                   <div className="flex flex-col italic">
                     <div className="flex justify-between">
@@ -161,22 +168,45 @@ const Product: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex justify-center">
-                    {/* Show only the "Edit" button if the product is deactivated */}
                     {product.productStatus === "Deactivated" ? (
-                      <div
-                        className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                        onClick={() => openUpdateModal(product)}
-                      >
-                        Edit
-                      </div>
+                      <>
+                        {productSku.some(
+                          (sku) => product.productId != sku.productId
+                        ) ? (
+                          <div
+                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                            onClick={() => openProductSKUModal(product)}
+                          >
+                            Edit SKU
+                          </div>
+                        ) : (
+                          <div
+                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                            onClick={() => openProductSKUModal(product)}
+                          >
+                            Add SKU
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <>
-                        <div
-                          className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                          onClick={() => openUpdateModal(product)}
-                        >
-                          Edit
-                        </div>
+                        {productSku.some(
+                          (sku) => product.productId != sku.productId
+                        ) ? (
+                          <div
+                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                            onClick={() => openProductSKUModal(product)}
+                          >
+                            Edit SKU
+                          </div>
+                        ) : (
+                          <div
+                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                            onClick={() => openProductSKUModal(product)}
+                          >
+                            Add SKU
+                          </div>
+                        )}
                         <div
                           className="text-[14px] border-1 border-white font-semibold text-center text-white bg-red-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-red-600 hover:border-gray-700"
                           onClick={() => openDeactivateModal(product)}

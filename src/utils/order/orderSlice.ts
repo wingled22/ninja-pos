@@ -65,6 +65,21 @@ export const updateOrder = createAsyncThunk(
   }
 );
 
+export const deleteOrder = createAsyncThunk(
+	"order/deleteOrder",
+	async (orderId: number, thunkAPI) => {
+		try {
+			return await orderService.deleteOrder(orderId);
+		} catch (e: any) {
+      const message =
+        (e.response && e.response.data && e.response.data.message) ||
+        e.message ||
+        e.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+	}
+);
+
 export const orderSlice = createSlice({
   name: "orders",
   initialState,
@@ -118,6 +133,21 @@ export const orderSlice = createSlice({
         state.message = "Order updated successfully!";
       })
       .addCase(updateOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+
+      // ✅ deleteOrder
+      .addCase(deleteOrder.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteOrder.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Order deleted successfully!";
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

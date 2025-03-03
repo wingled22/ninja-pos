@@ -37,10 +37,22 @@ const updateOrder = async (orderUpdate: OrderUpdateModel[]): Promise<OrderUpdate
   }
 };
 
+
+const deleteOrder = async (orderId: number): Promise<Order | null> => {
+	try {
+		const res: AxiosResponse<Order> = await apiClient.delete(`/${orderId}`);
+		return res.data;
+	} catch (e) {
+    console.log("An error occurred while deleting order:", e);
+    throw e;
+  }
+};
+
 const orderService = {
   getOrders,
   createOrder,
   updateOrder,
+  deleteOrder,
 };
 
 export default orderService;

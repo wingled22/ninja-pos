@@ -1,5 +1,5 @@
 interface OrderDetail {
-  orderDetailId: number;
+  orderDetailsId: number;
   orderId: number;
   productSkuId: number;
   orderQuantity: number;

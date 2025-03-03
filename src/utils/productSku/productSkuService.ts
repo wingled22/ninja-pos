@@ -6,10 +6,10 @@ const apiClient = axios.create({
   baseURL: "http://localhost:5228/api/ProductSKU",
 });
 
-const getSkuByProductId = async (productId: number): Promise<ProductSku[]> => {
+const getSkuById = async (productId: number): Promise<ProductSku[]> => {
   try {
     const res: AxiosResponse<ProductSku[]> = await apiClient.get(
-      `/GetSKU/${productId}`
+      `/${productId}`
     );
     return res.data;
   } catch (e) {
@@ -47,7 +47,7 @@ const createProductSKU = async (
 };
 
 const productSkuService = {
-  getSkuByProductId,
+  getSkuById,
   getProductSku,
   createProductSKU,
 };

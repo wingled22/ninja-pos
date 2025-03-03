@@ -36,12 +36,11 @@ const ClientDashboard: React.FC = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            setCart([]); // Clear cart after successful order
+            setCart([]);
         }
     }, [isSuccess]);
 
     const categories = [...new Set(products.map((product) => product.productCategory))];
-    // Filter products based on selected category
     const filteredProducts = selectedCategory
         ? products.filter((product) => product.productCategory === selectedCategory)
         : [];
@@ -56,7 +55,7 @@ const ClientDashboard: React.FC = () => {
     };
 
     const handleConfirmAddToCart = (quantity: number) => {
-        if (selectedProduct && selectedProduct.productSKUId) {  // ✅ Ensure productSKUId exists
+        if (selectedProduct && selectedProduct.productSKUId) { 
             setCart((prevCart) => {
                 const existingProductIndex = prevCart.findIndex(
                     (item) =>
@@ -89,10 +88,10 @@ const ClientDashboard: React.FC = () => {
             return prevCart
                 .map((item) =>
                     item.productSKUId === productSKUId
-                        ? { ...item, quantity: item.quantity - 1 } // Reduce quantity
+                        ? { ...item, quantity: item.quantity - 1 } 
                         : item
                 )
-                .filter((item) => item.quantity > 0); // Remove item if quantity is 0
+                .filter((item) => item.quantity > 0); 
         });
     };
 
@@ -108,7 +107,6 @@ const ClientDashboard: React.FC = () => {
             console.error("❌ Error: No valid items to order.");
             return;
         }
-        // Show confirmation dialog
         const result = await Swal.fire({
             title: "Finalize Order",
             text: "Do you want to place this order?",
@@ -131,8 +129,6 @@ const ClientDashboard: React.FC = () => {
             console.log("📤 Sending orderData to backend:", JSON.stringify(orderDataArray));
         }
     };
-
-
 
     return (
         <div className="bg-white flex flex-col flex-1 h-full w-full">
@@ -212,7 +208,6 @@ const ClientDashboard: React.FC = () => {
                             {cart.length > 0 ? (
                                 cart.map((item, index) => (
                                     <div key={index} className="flex items-center justify-center w-full">
-                                        {/* Minus Button */}
                                         <i
                                             className="fas fa-minus p-1 bg-gray-100 text-red-500 text-[12px] cursor-pointer hover:text-red-700 transition-all text-lg"
                                             onClick={() => handleRemoveFromCart(item.productSKUId)}
@@ -220,12 +215,10 @@ const ClientDashboard: React.FC = () => {
 
 
                                         <div className="flex items-center justify-between w-full">
-                                            {/* Product Details */}
                                             <span className="ml-1">
                                                 {item.productName} {item.unit} x{item.quantity}
                                             </span>
 
-                                            {/* Price */}
                                             <span className="font-medium text-right">
                                                 ₱{(item.price * item.quantity).toFixed(2)}
                                             </span>

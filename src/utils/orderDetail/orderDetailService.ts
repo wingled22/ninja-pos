@@ -8,7 +8,7 @@ const apiClient = axios.create({
 
 const getOrderDetails = async (): Promise<OrderDetail[]> => {
     try {
-        const res: AxiosResponse<OrderDetail[]> = await apiClient.get("GetAllOrderDetails");
+        const res: AxiosResponse<OrderDetail[]> = await apiClient.get("/GetAllOrderDetails");
         return res.data;
     } catch (e) {
         console.log("An error occured:", e);

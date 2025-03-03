@@ -8,6 +8,7 @@ import { getOrders } from "../utils/order/orderSlice";
 import { getOrderDetailByOrderId } from "../utils/orderDetail/orderDetailSlice";
 import { getSkuById } from "../utils/productSku/productSkuSlice";
 import { updateOrder } from "../utils/order/orderSlice";
+import { deleteOrder } from "../utils/order/orderSlice";
 import Order from "../utils/order/IOrder";
 import OrderDetail from "../utils/orderDetail/IOrderDetail";
 import OrderUpdateModel from "../utils/order/IOrderUpdateModel";
@@ -28,28 +29,28 @@ const Cart: React.FC = () => {
 
     const handleOrderClick = async (order: Order) => {
         setSelectedOrder(order);
-    
+
         try {
             let orderDetails = await dispatch(getOrderDetailByOrderId(order.orderId)).unwrap();
-    
+
             if (!Array.isArray(orderDetails)) {
                 orderDetails = [orderDetails];
             }
-    
+
             if (orderDetails.length === 0) {
                 setOrderItems([]);
                 return;
             }
-    
+
             // Fetch product details and ensure they include orderDetailsId
             const productDetails = await fetchProductDetails(orderDetails, dispatch);
-    
+
             setOrderItems(
                 productDetails
                     .filter((item) => item !== null)
                     .map((item, index) => ({
                         ...item,
-                        orderDetailsId: orderDetails[index]?.orderDetailsId, // Ensure orderDetailsId is included
+                        orderDetailsId: orderDetails[index]?.orderDetailsId,
                         orderQuantity: orderDetails[index]?.orderQuantity,
                         orderTotalPrice: orderDetails[index]?.orderTotalPrice,
                     })) as (ProductSku & OrderDetail)[]
@@ -58,7 +59,6 @@ const Cart: React.FC = () => {
             console.error("Error fetching order details:", error);
         }
     };
-    
 
     const fetchProductDetails = async (orderDetails: OrderDetail[], dispatch: AppDispatch) => {
         try {
@@ -73,9 +73,9 @@ const Cart: React.FC = () => {
                 }
 
                 return {
-                    orderDetailsId: detail.orderDetailsId, // ✅ Include orderDetailsId
-                    orderQuantity: detail.orderQuantity,    // Include orderQuantity
-                    orderTotalPrice: detail.orderTotalPrice, // Include orderTotalPrice
+                    orderDetailsId: detail.orderDetailsId,
+                    orderQuantity: detail.orderQuantity,
+                    orderTotalPrice: detail.orderTotalPrice,
                     name: product.name,
                     quantity: detail.orderQuantity,
                     price: product.price,
@@ -93,65 +93,57 @@ const Cart: React.FC = () => {
     };
 
     const handleQuantityChange = (orderDetailsId: number, change: number) => {
-        console.log("Clicked change:", change, "for orderDetailsId:", orderDetailsId);
-    
+
         setOrderItems((prevItems) =>
             prevItems.map((item) => {
                 if (item.orderDetailsId === orderDetailsId) {
                     const newQuantity = Math.max(1, item.orderQuantity + change);
-                    console.log("Updated quantity for orderDetailsId", orderDetailsId, ":", newQuantity);
-    
+
                     // Update or add the correct order detail update
                     setUpdatedOrderItems((prevUpdates) => {
                         const existingUpdateIndex = prevUpdates.findIndex(
                             (upd) => upd.orderdetailsID === orderDetailsId
                         );
-    
+
                         if (existingUpdateIndex !== -1) {
                             // Update existing quantity
                             const newUpdates = [...prevUpdates];
                             newUpdates[existingUpdateIndex].newquantity = newQuantity;
-                            console.log("Updated existing order detail:", newUpdates);
                             return newUpdates;
                         } else {
                             // Add new update
                             const newUpdate = { orderdetailsID: orderDetailsId, newquantity: newQuantity };
-                            console.log("Adding new order detail:", newUpdate);
                             return [...prevUpdates, newUpdate];
                         }
                     });
-    
+
                     return { ...item, orderQuantity: newQuantity };
                 }
                 return item;
             })
         );
     };
-    
 
     const handleSaveCartUpdates = async () => {
         if (!selectedOrder) return;
-    
-        console.log("Updated order items:", updatedOrderItems);
-    
+
         if (updatedOrderItems.length === 0) {
             Swal.fire("Info", "No changes made to the order.", "info");
             return;
         }
-    
-        // Correctly map updated items to send to the backend
+
         const updatedOrderDetails: OrderUpdateModel[] = updatedOrderItems.map((upd) => ({
-            orderDetailsId: upd.orderdetailsID, // ✅ Ensure the correct orderDetailsId is sent
-            newOrderQuantity: upd.newquantity,  // ✅ Ensure the updated quantity is sent
+            orderDetailsId: upd.orderdetailsID,
+            newOrderQuantity: upd.newquantity,
         }));
-    
+
         console.log("Sending updatedOrderDetails to backend:", updatedOrderDetails);
-    
+
         try {
             await dispatch(updateOrder(updatedOrderDetails)).unwrap();
-    
+
             Swal.fire("Success", "Order updated successfully!", "success");
-    
+
             // Refresh the order details
             handleOrderClick(selectedOrder);
             setIsEditing(false);
@@ -160,8 +152,29 @@ const Cart: React.FC = () => {
             Swal.fire("Error", error instanceof Error ? error.message : "Failed to update order.", "error");
         }
     };
-    
-    
+
+    const handleDeleteOrder = async (orderId: number) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This order will be permanently deleted!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    dispatch (deleteOrder(orderId));
+                    dispatch(getOrders()); // Refresh order list
+                    Swal.fire("Deleted!", "The order has been deleted.", "success");
+                } catch (error) {
+                    console.error("Failed to delete order:", error);
+                    Swal.fire("Error", "Failed to delete the order.", "error");
+                }
+            }
+        });
+    };
 
 
 
@@ -195,6 +208,7 @@ const Cart: React.FC = () => {
                                     <div
                                         className="flex items-center justify-center w-[60px] h-[60px] border-l border-gray-300 cursor-pointer hover:bg-blue-100 transition"
                                         title="Delete Order"
+                                        onClick={() => handleDeleteOrder(orders.orderId)}
                                     >
                                         <i className="bx bx-trash text-[17px] text-red-600 hover:text-red-700 transition"></i>
                                     </div>

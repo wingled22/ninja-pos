@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import orderService from "./orderService";
 import Order from "./IOrder";
 import OrderModel from "./IOrderModel";
+import OrderUpdateModel from "./IOrderUpdateModel";
 
 interface OrderState {
   orders: Order[];
@@ -49,6 +50,21 @@ export const createOrder = createAsyncThunk(
   }
 );
 
+export const updateOrder = createAsyncThunk(
+  "order/updateOrder",
+  async (orderUpdate: OrderUpdateModel[], thunkAPI) => {
+    try {
+      return await orderService.updateOrder(orderUpdate);
+    } catch (e: any) {
+      const message =
+        (e.response && e.response.data && e.response.data.message) ||
+        e.message ||
+        e.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const orderSlice = createSlice({
   name: "orders",
   initialState,
@@ -62,7 +78,7 @@ export const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    //getOrder
+      // getOrders
       .addCase(getOrders.pending, (state) => {
         state.isLoading = true;
       })
@@ -77,7 +93,7 @@ export const orderSlice = createSlice({
         state.message = action.payload as string;
       })
 
-      //createOrder
+      // createOrder
       .addCase(createOrder.pending, (state) => {
         state.isLoading = true;
       })
@@ -90,8 +106,24 @@ export const orderSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
+      })
+
+      // ✅ updateOrder
+      .addCase(updateOrder.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateOrder.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Order updated successfully!";
+      })
+      .addCase(updateOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
       });
   },
 });
+
 export const { reset } = orderSlice.actions;
 export default orderSlice.reducer;

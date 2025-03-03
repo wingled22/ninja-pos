@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import Order from "./IOrder";
 import OrderModel from "./IOrderModel";
+import OrderUpdateModel from "./IOrderUpdateModel";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:5228/Order",
@@ -26,9 +27,20 @@ const createOrder = async (orderData: OrderModel[]): Promise<OrderModel[]> => {
   }
 };
 
+const updateOrder = async (orderUpdate: OrderUpdateModel[]): Promise<OrderUpdateModel[]> => {
+  try {
+    const res: AxiosResponse<OrderUpdateModel[]> = await apiClient.post("UpdateOrder", orderUpdate);
+    return res.data;
+  } catch (e) {
+    console.log("An error occurred while updating order:", e);
+    throw e;
+  }
+};
+
 const orderService = {
   getOrders,
-  createOrder
+  createOrder,
+  updateOrder,
 };
 
 export default orderService;

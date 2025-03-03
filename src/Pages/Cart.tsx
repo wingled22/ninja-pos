@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import AdminNavbar from '../Components/AdminNavbar';
 import Logo from '../assets/Images/NT.png';
 import { useDispatch, useSelector } from "react-redux";
@@ -6,58 +7,64 @@ import { AppDispatch, RootState } from "../utils/store";
 import { getOrders } from "../utils/order/orderSlice";
 import { getOrderDetailByOrderId } from "../utils/orderDetail/orderDetailSlice";
 import { getSkuById } from "../utils/productSku/productSkuSlice";
+import { updateOrder } from "../utils/order/orderSlice";
 import Order from "../utils/order/IOrder";
 import OrderDetail from "../utils/orderDetail/IOrderDetail";
+import OrderUpdateModel from "../utils/order/IOrderUpdateModel";
 import ProductSku from "../utils/productSku/IProductSku";
 
 const Cart: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { orders } = useSelector((state: RootState) => state.orders);
 
-    // State to track the selected order
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-    const [orderItems, setOrderItems] = useState<ProductSku[]>([]);
+    const [orderItems, setOrderItems] = useState<(ProductSku & OrderDetail)[]>([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [updatedOrderItems, setUpdatedOrderItems] = useState<{ orderdetailsID: number; newquantity: number }[]>([]);
 
-    // Fetch orders when the component mounts
     useEffect(() => {
         dispatch(getOrders());
     }, [dispatch]);
 
-    // Handle order selection and fetch its details
     const handleOrderClick = async (order: Order) => {
         setSelectedOrder(order);
-        console.log("Fetching order details for orderId:", order.orderId);
-
+    
         try {
             let orderDetails = await dispatch(getOrderDetailByOrderId(order.orderId)).unwrap();
-            console.log("Fetched Order Details:", orderDetails);
-
-            // Ensure orderDetails is always an array
+    
             if (!Array.isArray(orderDetails)) {
                 orderDetails = [orderDetails];
             }
-
+    
             if (orderDetails.length === 0) {
-                console.warn("No order details found for this order.");
-                setOrderItems([]); // Clear previous items
+                setOrderItems([]);
                 return;
             }
-
-            // Fetch product details for all order items
+    
+            // Fetch product details and ensure they include orderDetailsId
             const productDetails = await fetchProductDetails(orderDetails, dispatch);
-            setOrderItems(productDetails.filter((item) => item !== null) as ProductSku[]);
+    
+            setOrderItems(
+                productDetails
+                    .filter((item) => item !== null)
+                    .map((item, index) => ({
+                        ...item,
+                        orderDetailsId: orderDetails[index]?.orderDetailsId, // Ensure orderDetailsId is included
+                        orderQuantity: orderDetails[index]?.orderQuantity,
+                        orderTotalPrice: orderDetails[index]?.orderTotalPrice,
+                    })) as (ProductSku & OrderDetail)[]
+            );
         } catch (error) {
             console.error("Error fetching order details:", error);
         }
     };
+    
 
-    // Fetch Product Details based on productSkuId
     const fetchProductDetails = async (orderDetails: OrderDetail[], dispatch: AppDispatch) => {
         try {
             const productPromises = orderDetails.map(async (detail) => {
                 const productData = await dispatch(getSkuById(detail.productSkuId)).unwrap();
 
-                // Ensure we get a valid product object (handle array case)
                 const product = Array.isArray(productData) ? productData[0] : productData;
 
                 if (!product) {
@@ -66,15 +73,18 @@ const Cart: React.FC = () => {
                 }
 
                 return {
+                    orderDetailsId: detail.orderDetailsId, // ✅ Include orderDetailsId
+                    orderQuantity: detail.orderQuantity,    // Include orderQuantity
+                    orderTotalPrice: detail.orderTotalPrice, // Include orderTotalPrice
                     name: product.name,
                     quantity: detail.orderQuantity,
                     price: product.price,
                     unit: product.unit,
-                    productSKUId: detail.productSkuId
+                    productSKUId: detail.productSkuId,
                 };
             });
 
-            const products = (await Promise.all(productPromises)).filter(Boolean); // Remove null values
+            const products = (await Promise.all(productPromises)).filter(Boolean);
             return products;
         } catch (error) {
             console.error("Error fetching product details:", error);
@@ -82,7 +92,76 @@ const Cart: React.FC = () => {
         }
     };
 
+    const handleQuantityChange = (orderDetailsId: number, change: number) => {
+        console.log("Clicked change:", change, "for orderDetailsId:", orderDetailsId);
+    
+        setOrderItems((prevItems) =>
+            prevItems.map((item) => {
+                if (item.orderDetailsId === orderDetailsId) {
+                    const newQuantity = Math.max(1, item.orderQuantity + change);
+                    console.log("Updated quantity for orderDetailsId", orderDetailsId, ":", newQuantity);
+    
+                    // Update or add the correct order detail update
+                    setUpdatedOrderItems((prevUpdates) => {
+                        const existingUpdateIndex = prevUpdates.findIndex(
+                            (upd) => upd.orderdetailsID === orderDetailsId
+                        );
+    
+                        if (existingUpdateIndex !== -1) {
+                            // Update existing quantity
+                            const newUpdates = [...prevUpdates];
+                            newUpdates[existingUpdateIndex].newquantity = newQuantity;
+                            console.log("Updated existing order detail:", newUpdates);
+                            return newUpdates;
+                        } else {
+                            // Add new update
+                            const newUpdate = { orderdetailsID: orderDetailsId, newquantity: newQuantity };
+                            console.log("Adding new order detail:", newUpdate);
+                            return [...prevUpdates, newUpdate];
+                        }
+                    });
+    
+                    return { ...item, orderQuantity: newQuantity };
+                }
+                return item;
+            })
+        );
+    };
+    
 
+    const handleSaveCartUpdates = async () => {
+        if (!selectedOrder) return;
+    
+        console.log("Updated order items:", updatedOrderItems);
+    
+        if (updatedOrderItems.length === 0) {
+            Swal.fire("Info", "No changes made to the order.", "info");
+            return;
+        }
+    
+        // Correctly map updated items to send to the backend
+        const updatedOrderDetails: OrderUpdateModel[] = updatedOrderItems.map((upd) => ({
+            orderDetailsId: upd.orderdetailsID, // ✅ Ensure the correct orderDetailsId is sent
+            newOrderQuantity: upd.newquantity,  // ✅ Ensure the updated quantity is sent
+        }));
+    
+        console.log("Sending updatedOrderDetails to backend:", updatedOrderDetails);
+    
+        try {
+            await dispatch(updateOrder(updatedOrderDetails)).unwrap();
+    
+            Swal.fire("Success", "Order updated successfully!", "success");
+    
+            // Refresh the order details
+            handleOrderClick(selectedOrder);
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Failed to update order:", error);
+            Swal.fire("Error", error instanceof Error ? error.message : "Failed to update order.", "error");
+        }
+    };
+    
+    
 
 
 
@@ -121,14 +200,8 @@ const Cart: React.FC = () => {
                                     </div>
                                     <div
                                         className="flex items-center justify-center w-[60px] h-[60px] border-l border-gray-300 cursor-pointer hover:bg-blue-100 transition"
-                                        title="Edit Order"
-                                    >
-                                        <i className="bx bx-edit text-[17px] text-blue-600 hover:text-blue-700 transition"></i>
-                                    </div>
-                                    <div
-                                        className="flex items-center justify-center w-[60px] h-[60px] border-l border-gray-300 cursor-pointer hover:bg-blue-100 transition"
                                         title="View Info"
-                                        onClick={() => handleOrderClick(orders)} // Set selected order
+                                        onClick={() => handleOrderClick(orders)}
                                     >
                                         <i className="bx bx-info-circle text-[17px] text-gray-600 hover:text-gray-700 transition"></i>
                                     </div>
@@ -146,13 +219,26 @@ const Cart: React.FC = () => {
                 <div className="p-3 h-full w-full flex flex-col items-center justify-between">
                     {selectedOrder ? (
                         <>
-
-                            <div className="text-sm text-gray-700 space-y-2 w-full">
+                            <div className="mt-5 text-sm text-gray-700 space-y-2 w-full">
                                 {orderItems.length > 0 ? (
                                     orderItems.map((item, index) => (
-                                        <div key={index} className="flex justify-between">
-                                            <span>{item.name} {item.unit} x{item.quantity}</span>
-                                            <span className="font-medium text-right">₱ {(item.price).toFixed(2)}</span>
+                                        <div key={index} className="flex items-center w-full">
+                                            {isEditing && (
+                                                <div className="flex">
+                                                    <i
+                                                        className="fas fa-minus p-1 mr-1 bg-gray-100 text-red-500 text-[12px] cursor-pointer hover:text-red-700 transition-all text-lg"
+                                                        onClick={() => handleQuantityChange(item.orderDetailsId, -1)}
+                                                    ></i>
+                                                    <i
+                                                        className="fas fa-plus p-1 mr-2 bg-gray-100 text-green-500 text-[12px] cursor-pointer hover:text-green-700 transition-all text-lg"
+                                                        onClick={() => handleQuantityChange(item.orderDetailsId, 1)}
+                                                    ></i>
+                                                </div>
+                                            )}
+                                            <div key={index} className="flex justify-between items-center w-full">
+                                                <span>{item.name} {item.unit}&nbsp;x{item.orderQuantity}</span>
+                                                <span className="font-medium text-right">₱&nbsp;{(item.price).toFixed(2)}</span>
+                                            </div>
                                         </div>
                                     ))
                                 ) : (
@@ -160,11 +246,22 @@ const Cart: React.FC = () => {
                                 )}
                             </div>
 
-                            <div className="mt-5 text-sm text-gray-800 text-center">
+                            <div className="mt-5 text-sm text-gray-800 text-center w-full">
                                 <p className="font-semibold">Total: ₱ {orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</p>
                                 <p className="text-gray-500 italic">
                                     Ordered on {new Date(selectedOrder.orderDate).toLocaleDateString()}
                                 </p>
+                                <div
+                                    onClick={() => {
+                                        if (isEditing) {
+                                            handleSaveCartUpdates();
+                                        }
+                                        setIsEditing(!isEditing);
+                                    }}
+                                    className="mt-5 flex items-center justify-center cursor-pointer w-full py-2 text-white bg-blue-600 rounded-lg shadow-md transition-all duration-300 text-sm font-semibold active:scale-[.957] hover:bg-blue-700"
+                                >
+                                    {isEditing ? "Save Order" : "Edit Order"}
+                                </div>
                             </div>
                         </>
                     ) : (
@@ -172,8 +269,6 @@ const Cart: React.FC = () => {
                     )}
                 </div>
             </div>
-
-
         </div>
     );
 }

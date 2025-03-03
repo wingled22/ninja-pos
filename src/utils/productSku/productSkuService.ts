@@ -6,9 +6,11 @@ const apiClient = axios.create({
   baseURL: "http://localhost:5228/api/ProductSKU",
 });
 
-const getSkuById = async (productSkuId: number): Promise<ProductSku[]> => {
+const getSkuById = async (productId: number): Promise<ProductSku[]> => {
   try {
-    const res: AxiosResponse<ProductSku[]> = await apiClient.get(`/GetSKU/${productSkuId}`);
+    const res: AxiosResponse<ProductSku[]> = await apiClient.get(
+      `/${productId}`
+    );
     return res.data;
   } catch (e) {
     console.log("An error occurred", e);

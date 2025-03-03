@@ -1,34 +1,83 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse, AxiosError } from "axios";
 import Client from "./IClient";
 import ClientModel from "./IClientModel";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:5228/api",
+	baseURL: "http://localhost:5228/api",
 });
 
 const getClients = async (): Promise<Client[]> => {
-  try {
-    const res: AxiosResponse<Client[]> = await apiClient.get("/Client");
-    return res.data;
-  } catch (e) {
-    console.log("Something went wrong!", e);
-    return [];
-  }
+	try {
+		const res: AxiosResponse<Client[]> = await apiClient.get("/Client");
+		return res.data;
+	} catch (e: unknown) {
+		if (e instanceof AxiosError) {
+			toast.error(`Failed to fetch clients: ${e.message}`);
+		} else {
+			toast.error("Unexpected error occurred while fetching clients.");
+		}
+		return [];
+	}
 };
 
 const addClient = async (client: ClientModel): Promise<Client> => {
-  try {
-    const res: AxiosResponse<Client> = await apiClient.post("/Client", client);
-    return res.data;
-  } catch (e: any) {
-    console.log("Something went wrong!", e);
-    throw new Error("Failed to add client:"+e)
-  }
+	try {
+		const res: AxiosResponse<Client> = await apiClient.post("/Client", client);
+		toast.success("Client added successfully!");
+		return res.data;
+	} catch (e: unknown) {
+		if (e instanceof AxiosError) {
+			toast.error(`Failed to add client: ${e.message}`);
+		} else {
+			toast.error("Unexpected error occurred while adding client.");
+		}
+		throw new Error("Failed to add client: " + e);
+	}
+};
+
+const deleteClient = async (clientId: number): Promise<Client | null> => {
+	try {
+		const res: AxiosResponse<Client> = await apiClient.delete(`/Client/${clientId}`);
+		toast.success("Client deleted successfully");
+		return res.data;
+	} catch (e: unknown) {
+		if (e instanceof AxiosError) {
+			toast.error(`Failed to delete client: ${e.response?.data?.message || e.message}`);
+		} else {
+			toast.error("Unexpected error occurred while deleting client.");
+		}
+		throw e;
+	}
+};
+
+const updateClient = async (clientId: number, updatedData: Partial<Client>): Promise<Client> => {
+	try {
+		const params = new URLSearchParams({
+			clientName: updatedData.clientName || "",
+			clientEmail: updatedData.clientEmail || ""
+		}).toString();
+
+		const res: AxiosResponse<Client> = await apiClient.put(`/Client/${clientId}?${params}`, updatedData);
+
+		toast.success("Client updated successfully");
+		return res.data;
+	} catch (e: unknown) {
+		if (e instanceof AxiosError) {
+			toast.error(`Failed to update client: ${e.response?.data?.message || e.message}`);
+		} else {
+			toast.error("Unexpected error occurred while updating client.");
+		}
+		throw e;
+	}
 };
 
 const clientService = {
-  getClients,
-  addClient,
+	getClients,
+	addClient,
+	deleteClient,
+	updateClient,
 };
 
 export default clientService;

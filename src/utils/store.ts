@@ -8,12 +8,12 @@ import orderReducer from "./order/orderSlice";
 export const store = configureStore({
   reducer: {
     productSku: productSkuReducer,
-    products: productReducer,
     clients: clientReducer,
+    products: productReducer,
     orderDetails: orderDetailReducer,
     orders: orderReducer,
   },
 });
 
-export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

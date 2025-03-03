@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from "../utils/store";
 import AddProductModal from "../Components/Modal/AddProductModal";
 import UpdateProductModal from "../Components/Modal/UpdateProductModal";
 import DeactivateProductModal from "../Components/Modal/DeactivateProductModal";
+import CreateProductSkuModal from "../Components/Modal/CreateProductSkuModal"
 
 const Product: React.FC = () => {
   const { products } = useSelector((state: RootState) => state.products);
@@ -16,6 +17,7 @@ const Product: React.FC = () => {
   const [isUpdateModalOpen, setUpdateIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteIsModalOpen] = useState(false);
   const [isAddModalOpen, setAddIsModalOpen] = useState(false);
+  const [isProductSKUModalOpen, setProductSKUIsModalOpen] = useState(false);
 
   const [selectedProduct, setSelectedProduct] = useState<Products | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +39,11 @@ const Product: React.FC = () => {
 
   const handleAddComplete = async () => {
     setAddIsModalOpen(false); // Close modal
+    await dispatch(getProducts()); // Refresh product list
+  };
+
+  const handleProductSKUComplete = async () => {
+    setProductSKUIsModalOpen(false); // Close modal
     await dispatch(getProducts()); // Refresh product list
   };
 
@@ -62,6 +69,12 @@ const Product: React.FC = () => {
   const openModal = (product: Products) => {
     setSelectedProduct(product);
     setAddIsModalOpen(true);
+  };
+
+  const openProductSKUModal = (product: Products) => {
+    setSelectedProduct(product);
+    setProductSKUIsModalOpen(true);
+    console.log(product);
   };
 
   const openDeactivateModal = (product: Products) => {
@@ -115,7 +128,10 @@ const Product: React.FC = () => {
                       />
                     </div>
                     <div className="flex flex-col justify-center">
-                      <div className="font-bold text-[15px] text-gray-800">
+                      <div
+                        className="font-bold text-[15px] text-gray-800 cursor-pointer"
+                        onClick={() => openProductSKUModal(product)}
+                      >
                         {product.productName}
                       </div>
                       <p className="text-gray-500 text-[12px]">Milk 25g</p>
@@ -237,6 +253,13 @@ const Product: React.FC = () => {
           product={selectedProduct}
           onClose={() => setDeactivateIsModalOpen(false)}
           onUpdateComplete={handleDeactivateComplete} // Pass callback
+        />
+      )}
+      {isProductSKUModalOpen && selectedProduct && (
+        <CreateProductSkuModal
+          product={selectedProduct}
+          onClose={() => setProductSKUIsModalOpen(false)}
+          onUpdateComplete={handleProductSKUComplete} // Pass callback
         />
       )}
     </div>

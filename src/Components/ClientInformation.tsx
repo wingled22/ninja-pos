@@ -1,6 +1,9 @@
 import Turtle from "../assets/Images/NT.png";
 
-const ClientInformation: React.FC = () => {
+const ClientInformation: React.FC<{
+    clientName: string | undefined,
+    clientEmail: string | undefined
+}> = ({clientName, clientEmail}) => {
     return (
         <div className="absolute top-[10%] right-0 w-[calc(29%-120px)] h-[90vh] bg-[#FEFEFE] border border-gray-300 flex flex-col p-5">
             {/* Profile Image */}
@@ -11,9 +14,11 @@ const ClientInformation: React.FC = () => {
                     className="w-30 h-30 rounded-full border border-blue-500 bg-green-200 p-2"
                 />
                 <h3 className="text-center font-semibold text-gray-800 mt-2">
-                    Ninja Turtle
+                    {clientName || "Ninja Turtle"}
                 </h3>
-                <p className="text-sm text-black">ninjaturtle@gmail.com</p>
+                <p className="text-sm text-black">
+                    {clientEmail || "ninjaturtle@gmail.com"}
+                </p>
             </div>
             <div className="mt-6 w-full space-y-4 text-left px-6 flex-1">
                 <p className="flex items-center text-gray-700 text-sm">

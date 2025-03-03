@@ -56,6 +56,12 @@ const Client: React.FC = () => {
         toast.dismiss();
     };
 
+    // will display client information on other component
+    const handleCardClick = (clientId: number) => {
+        setSelectedClientId(clientId);
+        toast.dismiss();
+    }
+
     // get the selected client's details upon deletion
     const selectedClient = clients.find((client) => client.clientId === selectedClientId);
 
@@ -101,8 +107,9 @@ const Client: React.FC = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
                             {filteredClients.map((client) => (
                                 <div
+                                    onClick={() => handleCardClick(client.clientId as number)}
                                     key={client.clientId}
-                                    className="bg-white shadow-md rounded-lg p-4 flex items-center hover:bg-slate-100 hover:border-green-500 space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300"
+                                    className="bg-white shadow-md rounded-lg p-4 flex items-center hover:bg-slate-100 hover:border-green-500 space-x-4 border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer"
                                 >
                                     <img
                                         src={Turtle}
@@ -136,7 +143,10 @@ const Client: React.FC = () => {
                 </div>
             </div>
 
-            <ClientInformation />
+            <ClientInformation
+                clientName={selectedClient?.clientName}
+                clientEmail={selectedClient?.clientEmail}
+            />
 
             {isAddClientModalOpen && <AddClientModal onClose={() => setIsAddClientModalOpen(false)} />}
 

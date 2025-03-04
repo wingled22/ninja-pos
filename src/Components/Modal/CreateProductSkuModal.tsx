@@ -78,7 +78,7 @@ const CreateProductSkuModal: React.FC<{
         <form className="space-y-4">
           <div>
             <input
-              type="text"
+              type="hidden"
               name="productId"
               value={productSku.productId}
               className="border text-black"

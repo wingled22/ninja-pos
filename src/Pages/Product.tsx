@@ -170,19 +170,22 @@ const Product: React.FC = () => {
                   <div className="flex justify-center">
                     {product.productStatus === "Deactivated" ? (
                       <>
-                        {productSku.some(
-                          (sku) => product.productId != sku.productId
-                        ) ? (
+                        {productSku.some((sku) => {
+                          console.log("Checking SKU ID:", sku.productId); // Debugging
+                          return (
+                            String(sku.productId) === String(product.productId)
+                          );
+                        }) ? (
                           <div
                             className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                            onClick={() => openProductSKUModal(product)}
+                            onClick={() => openProductSKUModal(product)} // Edit SKU modal
                           >
                             Edit SKU
                           </div>
                         ) : (
                           <div
                             className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                            onClick={() => openProductSKUModal(product)}
+                            onClick={() => openProductSKUModal(product)} // Add SKU modal
                           >
                             Add SKU
                           </div>
@@ -190,19 +193,22 @@ const Product: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        {productSku.some(
-                          (sku) => product.productId != sku.productId
-                        ) ? (
+                        {productSku.some((sku) => {
+                          console.log("Checking SKU ID:", sku.productId); // Debugging
+                          return (
+                            String(sku.productId) === String(product.productId)
+                          );
+                        }) ? (
                           <div
                             className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                            onClick={() => openProductSKUModal(product)}
+                            onClick={() => openProductSKUModal(product)} // Edit SKU modal
                           >
                             Edit SKU
                           </div>
                         ) : (
                           <div
                             className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                            onClick={() => openProductSKUModal(product)}
+                            onClick={() => openProductSKUModal(product)} // Add SKU modal
                           >
                             Add SKU
                           </div>

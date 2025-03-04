@@ -21,7 +21,7 @@ const getSkuByProductId = async (productId: number): Promise<ProductSku[]> => {
 const getProductSku = async (): Promise<ProductSku[]> => {
   try {
     const res: AxiosResponse<ProductSku[]> = await apiClient.get(
-      "/GetProductSku"
+      ""
     );
     return res.data;
   } catch (e) {

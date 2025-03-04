@@ -2,7 +2,7 @@ import { useState } from "react";
 // import Client from "../../utils/client/IClient";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../utils/store";
-import { addClient } from "../../utils/client/clientSlice";
+import { addClient, getClients } from "../../utils/client/clientSlice";
 import ClientModel from "../../utils/client/IClientModel";
 
 const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -25,6 +25,7 @@ const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
    const addClientHandler = async (): Promise<void> => {
       try {
          await dispatch(addClient(client));
+         await dispatch(getClients());
          onClose();
       } catch (e) {
          console.log("An error occured", e);

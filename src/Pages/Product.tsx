@@ -12,6 +12,7 @@ import AddProductModal from "../Components/Modal/AddProductModal";
 import UpdateProductModal from "../Components/Modal/UpdateProductModal";
 import DeactivateProductModal from "../Components/Modal/DeactivateProductModal";
 import CreateProductSkuModal from "../Components/Modal/CreateProductSkuModal";
+import UpdateProductSkuModal from "../Components/Modal/UpdateProductSkuModal";
 
 const Product: React.FC = () => {
   const { products } = useSelector((state: RootState) => state.products);
@@ -20,9 +21,14 @@ const Product: React.FC = () => {
   const [isUpdateModalOpen, setUpdateIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteIsModalOpen] = useState(false);
   const [isAddModalOpen, setAddIsModalOpen] = useState(false);
-  const [isProductSKUModalOpen, setProductSKUIsModalOpen] = useState(false);
+  const [isAddProductSKUModalOpen, setAddProductSKUIsModalOpen] =
+    useState(false);
+  const [isEditProductSKUModalOpen, setEditProductSKUIsModalOpen] =
+    useState(false);
 
   const [selectedProduct, setSelectedProduct] = useState<Products | null>(null);
+  const [selectedProductSku, setSelectedProductSku] =
+    useState<ProductSkus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string>("");
 
@@ -46,9 +52,14 @@ const Product: React.FC = () => {
     await dispatch(getProducts()); // Refresh product list
   };
 
-  const handleProductSKUComplete = async () => {
-    setProductSKUIsModalOpen(false); // Close modal
-    await dispatch(getProducts()); // Refresh product list
+  const handleAddProductSKUComplete = async () => {
+    setAddProductSKUIsModalOpen(false); // Close modal
+    await dispatch(getProductSku()); // Refresh product list
+  };
+
+  const handleEditProductSKUComplete = async () => {
+    setEditProductSKUIsModalOpen(false); // Close modal
+    await dispatch(getProductSku()); // Refresh product list
   };
 
   const handleDeleteComplete = async () => {
@@ -75,10 +86,16 @@ const Product: React.FC = () => {
     setAddIsModalOpen(true);
   };
 
-  const openProductSKUModal = (product: Products) => {
+  const openAddProductSKUModal = (product: Products) => {
     setSelectedProduct(product);
-    setProductSKUIsModalOpen(true);
+    setAddProductSKUIsModalOpen(true);
     console.log(product);
+  };
+
+  const openEditProductSKUModal = (productSku: ProductSkus) => {
+    setSelectedProductSku(productSku);
+    setEditProductSKUIsModalOpen(true);
+    // console.log(productSku);
   };
 
   const openDeactivateModal = (product: Products) => {
@@ -98,7 +115,7 @@ const Product: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("Selected option:", selectedOption);
+    // console.log("Selected option:", selectedOption);
   };
 
   return (
@@ -118,112 +135,111 @@ const Product: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-4 gap-[15px] col-span-4 md:col-span-3 m-3">
-              {products.map((product) => (
-                <div
-                  key={product.productId}
-                  className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3"
-                >
-                  <div className="flex justify-between item-center">
-                    <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
-                      <img
-                        className="w-16 h-16 object-contain bearbrand"
-                        src={bearbrand}
-                        alt="Bear Brand Milk"
-                      />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <div className="font-bold text-[15px] text-gray-800">
-                        {product.productName}
+              {products.map((product) => {
+                const sku = productSku.find(
+                  (sku) => String(sku.productId) === String(product.productId)
+                );
+
+                return (
+                  <div
+                    key={product.productId}
+                    className="relative flex flex-col justify-between bg-white rounded-xl shadow-md w-55 h-50 border-1 border-solid border-gray-300 p-3"
+                  >
+                    <div className="flex justify-between item-center">
+                      <div className="border-1 border-solid border-gray-300 rounded-full bg-gray-300">
+                        <img
+                          className="w-16 h-16 object-contain bearbrand"
+                          src={bearbrand}
+                          alt="Bear Brand Milk"
+                        />
                       </div>
-                      <p className="text-gray-500 text-[12px]">Milk 25g</p>
-                    </div>
-                    <div>
-                      <i
-                        className="fa-solid fa-pen-to-square text-[14px] text-blue-500 cursor-pointer"
-                        onClick={() => openUpdateModal(product)}
-                      ></i>
-                      <i
-                        className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"
-                        onClick={() => openDeleteModal(product)}
-                      ></i>
-                    </div>
-                  </div>
-                  <div className="flex flex-col italic">
-                    <div className="flex justify-between">
-                      <span className="text-[13px] text-gray-500">
-                        Stock: 5x
-                      </span>
-                      <span
-                        className={`text-[13px] text-white rounded-lg w-[40%] text-center ${
-                          product.productStatus === "Activated"
-                            ? "bg-green-500"
-                            : "bg-red-500"
-                        }`}
-                      >
-                        {product.productStatus}
-                      </span>
-                    </div>
-                    <span className="text-[13px] text-gray-500">
-                      Price: ₱60.00
-                    </span>
-                  </div>
-                  <div className="flex justify-center">
-                    {product.productStatus === "Deactivated" ? (
-                      <>
-                        {productSku.some((sku) => {
-                          console.log("Checking SKU ID:", sku.productId); // Debugging
-                          return (
-                            String(sku.productId) === String(product.productId)
-                          );
-                        }) ? (
-                          <div
-                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                            onClick={() => openProductSKUModal(product)} // Edit SKU modal
-                          >
-                            Edit SKU
-                          </div>
-                        ) : (
-                          <div
-                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                            onClick={() => openProductSKUModal(product)} // Add SKU modal
-                          >
-                            Add SKU
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {productSku.some((sku) => {
-                          console.log("Checking SKU ID:", sku.productId); // Debugging
-                          return (
-                            String(sku.productId) === String(product.productId)
-                          );
-                        }) ? (
-                          <div
-                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                            onClick={() => openProductSKUModal(product)} // Edit SKU modal
-                          >
-                            Edit SKU
-                          </div>
-                        ) : (
-                          <div
-                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
-                            onClick={() => openProductSKUModal(product)} // Add SKU modal
-                          >
-                            Add SKU
-                          </div>
-                        )}
-                        <div
-                          className="text-[14px] border-1 border-white font-semibold text-center text-white bg-red-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-red-600 hover:border-gray-700"
-                          onClick={() => openDeactivateModal(product)}
-                        >
-                          Deactivate
+                      <div className="flex flex-col justify-center">
+                        <div className="font-bold text-[15px] text-gray-800">
+                          {product.productName}
                         </div>
-                      </>
-                    )}
+                        <p className="text-gray-500 text-[12px]">
+                        {sku?.name || "Name Unknown"}
+                        {sku?.unit || "Unit Unknown"}
+                        </p>
+                      </div>
+                      <div>
+                        <i
+                          className="fa-solid fa-pen-to-square text-[14px] text-blue-500 cursor-pointer"
+                          onClick={() => openUpdateModal(product)}
+                        ></i>
+                        <i
+                          className="fa-solid fa-trash text-[14px] text-red-500 cursor-pointer"
+                          onClick={() => openDeleteModal(product)}
+                        ></i>
+                      </div>
+                    </div>
+                    <div className="flex flex-col italic">
+                      <div className="flex justify-between">
+                        <span className="text-[13px] text-gray-500">
+                          Stock: {sku?.quantity || "0"}x
+                        </span>
+                        <span
+                          className={`text-[13px] text-white rounded-lg w-[40%] text-center ${
+                            product.productStatus === "Activated"
+                              ? "bg-green-500"
+                              : "bg-red-500"
+                          }`}
+                        >
+                          {product.productStatus}
+                        </span>
+                      </div>
+                      <span className="text-[13px] text-gray-500">
+                        Price: ₱{sku?.price?.toFixed(2) || "0.00"}
+                      </span>
+                    </div>
+                    <div className="flex justify-center">
+                      {product.productStatus === "Deactivated" ? (
+                        <>
+                          {sku ? (
+                            <div
+                              className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                              onClick={() => openEditProductSKUModal(sku)} // Edit SKU modal
+                            >
+                              Edit SKU
+                            </div>
+                          ) : (
+                            <div
+                              className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                              onClick={() => openAddProductSKUModal(product)} // Add SKU modal
+                            >
+                              Add SKU
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {sku ? (
+                            <div
+                              className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                              onClick={() => openEditProductSKUModal(sku)} // Edit SKU modal
+                            >
+                              Edit SKU
+                            </div>
+                          ) : (
+                            <div
+                              className="text-[14px] border-1 border-white font-semibold text-center text-white bg-blue-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-blue-600 hover:border-gray-700"
+                              onClick={() => openAddProductSKUModal(product)} // Add SKU modal
+                            >
+                              Add SKU
+                            </div>
+                          )}
+                          <div
+                            className="text-[14px] border-1 border-white font-semibold text-center text-white bg-red-500 rounded-lg p-2 w-[80%] cursor-pointer hover:bg-red-600 hover:border-gray-700"
+                            onClick={() => openDeactivateModal(product)}
+                          >
+                            Deactivate
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -291,11 +307,18 @@ const Product: React.FC = () => {
           onUpdateComplete={handleDeactivateComplete} // Pass callback
         />
       )}
-      {isProductSKUModalOpen && selectedProduct && (
+      {isAddProductSKUModalOpen && selectedProduct && (
         <CreateProductSkuModal
           product={selectedProduct}
-          onClose={() => setProductSKUIsModalOpen(false)}
-          onUpdateComplete={handleProductSKUComplete} // Pass callback
+          onClose={() => setAddProductSKUIsModalOpen(false)}
+          onUpdateComplete={handleAddProductSKUComplete} // Pass callback
+        />
+      )}
+      {isEditProductSKUModalOpen && selectedProductSku && (
+        <UpdateProductSkuModal
+          ProductSku={selectedProductSku}
+          onClose={() => setEditProductSKUIsModalOpen(false)}
+          onUpdateComplete={handleEditProductSKUComplete} // Pass callback
         />
       )}
     </div>

@@ -51,10 +51,36 @@ export const getProductSku = createAsyncThunk(
 );
 
 export const createProductSKU = createAsyncThunk(
-  "product/addProducts",
+  "productSku/createProductSKU",
   async (productSKU: ProductSkuModel, thunkAPI) => {
     try {
       return await productSkuService.createProductSKU(productSKU);
+    } catch (e: any) {
+      const message =
+        (e.response && e.response.data && e.response.data.message) ||
+        e.message ||
+        e.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateProductSku = createAsyncThunk(
+  "productSku/updateProductSku",
+  async (
+    {productSkuId, name, codeName, price, quantity, unit}: {
+      productSkuId: number;
+      name: string,
+      codeName: string;
+      price: number;
+      quantity: number;
+      unit: string;
+    }
+    , thunkAPI) => {
+    try {
+      return await productSkuService.updateProductSku(productSkuId, 
+        { name, codeName, price, quantity, unit }
+      );
     } catch (e: any) {
       const message =
         (e.response && e.response.data && e.response.data.message) ||
@@ -118,7 +144,23 @@ export const productSkuSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
-      });
+      })
+
+      // .addCase(updateProductSku.pending, (state) => {
+      //   state.isLoading = false;
+      //   state.isSuccess = true;
+
+      // })
+      // .addCase(updateProductSku.fulfilled, (state) => {
+      //   state.isLoading = false;
+      //   state.isSuccess = true;
+      //   state.message = "Created ProductSKU";
+      // })
+      // .addCase(updateProductSku.rejected, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isError = true;
+      //   state.message = action.payload as string;
+      // });
   },
 });
 export const { reset } = productSkuSlice.actions;

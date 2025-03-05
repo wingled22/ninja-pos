@@ -46,10 +46,34 @@ const createProductSKU = async (
   }
 };
 
+const updateProductSku = async (
+  productSkuId : number,
+  productSKU: { name: string; codeName: string; price: number; quantity: number; unit: string }
+): Promise<ProductSku> => {
+  try {
+    const res = await apiClient.put(
+      `${productSkuId}`,
+      productSKU, // Send only the fields being updated.
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res.data;
+  } catch (e: any) {
+    console.error("Something went wrong!", e.response?.data || e.message);
+    throw new Error(
+      "Failed to update product: " + (e.response?.data?.message || e.message)
+    );
+  }
+};
+
 const productSkuService = {
   getSkuById,
   getProductSku,
   createProductSKU,
+  updateProductSku,
 };
 
 export default productSkuService;

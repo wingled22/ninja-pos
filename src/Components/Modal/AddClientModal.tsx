@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../utils/store";
 import { addClient, getClients } from "../../utils/client/clientSlice";
 import ClientModel from "../../utils/client/IClientModel";
+import { toast } from "react-toastify";
 
 const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
@@ -23,6 +24,11 @@ const AddClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
    };
 
    const addClientHandler = async (): Promise<void> => {
+      if (!client.clientName || !client.clientEmail) {
+         toast.info("Please fill in all fields.");
+         return;
+      }
+      
       try {
          await dispatch(addClient(client));
          await dispatch(getClients());

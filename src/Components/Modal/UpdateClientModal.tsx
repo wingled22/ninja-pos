@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../utils/store";
 import { getClients, updateClient } from "../../utils/client/clientSlice";
+import { toast } from 'react-toastify';
 
 interface UpdateClientModalProps {
     onClose: () => void;
@@ -21,6 +22,10 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({
     const dispatch = useDispatch<AppDispatch>();
 
     const handleUpdate = async () => {
+        if (name === clientName && email === clientEmail) {
+            toast.info("No changes detected.");
+            return;
+        }
         await dispatch(updateClient({ clientId, clientData: { clientName: name, clientEmail: email } }));
         dispatch(getClients());
         onClose();

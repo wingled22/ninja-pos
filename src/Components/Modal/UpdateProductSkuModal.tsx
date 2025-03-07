@@ -1,30 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import ProductSku from "../../utils/productSku/IProductSku";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../utils/store";
-import { createProductSKU } from "../../utils/productSku/productSkuSlice";
-import ProductSkuModel from "../../utils/productSku/IProductSkuModel";
-import Product from "../../utils/product/IProduct";
+import { updateProductSku } from "../../utils/productSku/productSkuSlice";
 
-const CreateProductSkuModal: React.FC<{
+interface UpdateProductSkuModal {
   onClose: () => void;
-  product: Product;
+  ProductSku: ProductSku;
   onUpdateComplete: () => void;
-}> = ({ onClose, product: initialProduct, onUpdateComplete }) => {
-  const dispatch = useDispatch<AppDispatch>();
+}
 
-  // Initialize productSku with productId from initialProduct
-  const [productSku, setProductSku] = useState<ProductSkuModel>({
-    productId: initialProduct.productId,
-    name: "",
-    codeName: "",
-    price: 0,
-    quantity: 0,
-    unit: "",
-  });
-
+const UpdateProductSkuModal: React.FC<{
+  onClose: () => void;
+  ProductSku: ProductSku;
+  onUpdateComplete: () => void; // New prop
+}> = ({ onClose, ProductSku: initialProduct, onUpdateComplete }) => {
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const [ProductSku, setProductSku] = useState<ProductSku>(initialProduct);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProductSku((prev) => ({
       ...prev,
@@ -32,14 +27,23 @@ const CreateProductSkuModal: React.FC<{
     }));
   };
 
-  const creatProductSkuHandler = async (): Promise<void> => {
+  const UpdateProductskuHandler = async (): Promise<void> => {
     try {
-      await dispatch(createProductSKU(productSku));
-      onUpdateComplete(); // Notify parent component
-    } catch (e) {
-      console.error("An error occurred", e);
-    } finally {
+      await dispatch(
+        updateProductSku({
+          productSkuId: ProductSku.productSKUId,
+          // productId: ProductSku.productId,
+          name: ProductSku.name,
+          codeName: ProductSku.codeName,
+          price: ProductSku.price,
+          quantity: ProductSku.quantity,
+          unit: ProductSku.unit,
+        })
+      );
+      onUpdateComplete(); // Call the callback
       onClose(); // Close the modal
+    } catch (e) {
+      console.error("An error occurred:", e);
     }
   };
 
@@ -52,29 +56,16 @@ const CreateProductSkuModal: React.FC<{
     }
   };
 
-  useEffect(() => {
-    if (productSku.name) {
-      const words = productSku.name.trim().split(/\s+/);
-      const letters = words
-        .filter((word) => !/^\d+g$/i.test(word) && isNaN(Number(word)))
-        .map((word) => word.charAt(0).toUpperCase())
-        .join("");
-      const unitNumbers = productSku.unit?.match(/\d+/)?.[0] || "";
-      const generatedCodeName = `${letters}${unitNumbers}`;
-      setProductSku((prev) => ({ ...prev, codeName: generatedCodeName }));
-    }
-  }, [productSku.name, productSku.unit]);
-
   return (
     <div className="fixed inset-0 bg-opacity-95 backdrop-blur-xs flex justify-center items-center z-50">
       <div className="bg-white w-96 p-6 rounded-lg shadow-lg outline outline-gray-400">
-        <h2 className="text-black text-2xl font-bold mb-6">Add Product SKU</h2>
+        <h2 className="text-black text-2xl font-bold mb-6">Edit Product SKU</h2>
         <form className="space-y-4">
           <div>
             <input
               type="hidden"
               name="productId"
-              value={productSku.productId}
+              value={ProductSku.productSKUId}
               className="border text-black"
             />
             <label className="block text-sm font-medium text-gray-700">
@@ -83,8 +74,8 @@ const CreateProductSkuModal: React.FC<{
             <input
               type="text"
               name="name"
-              value={productSku.name}
-              onChange={handleInputChange}
+              value={ProductSku.name}
+              onChange={handleProductChange}
               required
               className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[100%]"
               placeholder="Enter SKU name"
@@ -98,8 +89,8 @@ const CreateProductSkuModal: React.FC<{
             <input
               type="text"
               name="codeName"
-              value={productSku.codeName}
-              onChange={handleInputChange}
+              value={ProductSku.codeName}
+              onChange={handleProductChange}
               required
               className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[100%]"
               placeholder="Enter code name"
@@ -114,8 +105,8 @@ const CreateProductSkuModal: React.FC<{
             <input
               type="number"
               name="price"
-              value={productSku.price}
-              onChange={handleInputChange}
+              value={ProductSku.price}
+              onChange={handleProductChange}
               required
               className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[100%]"
               placeholder="Enter price"
@@ -129,8 +120,8 @@ const CreateProductSkuModal: React.FC<{
             <input
               type="number"
               name="quantity"
-              value={productSku.quantity}
-              onChange={handleInputChange}
+              value={ProductSku.quantity}
+              onChange={handleProductChange}
               required
               className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[100%]"
               placeholder="Enter quantity"
@@ -144,8 +135,8 @@ const CreateProductSkuModal: React.FC<{
             <input
               type="text"
               name="unit"
-              value={productSku.unit}
-              onChange={handleInputChange}
+              value={ProductSku.unit}
+              onChange={handleProductChange}
               required
               className="p-2 text-[14px] font-medium border border-gray-300 rounded-md bg-[#FEFEFE] text-gray-800 w-[100%]"
               placeholder="Enter unit (e.g., pcs, kg)"
@@ -160,10 +151,10 @@ const CreateProductSkuModal: React.FC<{
               Close
             </div>
             <div
-              onClick={creatProductSkuHandler}
+              onClick={UpdateProductskuHandler}
               className="cursor-pointer ml-3 w-[100px] p-2 text-[14px] rounded-lg bg-blue-600 text-white font-semibold text-center"
             >
-              Add SKU
+              Update Sku
             </div>
           </div>
         </form>
@@ -172,4 +163,5 @@ const CreateProductSkuModal: React.FC<{
   );
 };
 
-export default CreateProductSkuModal;
+export default UpdateProductSkuModal;
+

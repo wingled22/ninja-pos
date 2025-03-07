@@ -11,8 +11,8 @@ const AddToCartModal: React.FC<{
     const [error, setError] = useState<string | null>(null);
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-md">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+        <div className="z-1000 fixed inset-0 flex items-center justify-center bg-black/20">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative border-1 border-gray-200">
                 {/* Close Button */}
                 <div
                     onClick={onClose}

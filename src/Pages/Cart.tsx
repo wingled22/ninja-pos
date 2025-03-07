@@ -176,8 +176,6 @@ const Cart: React.FC = () => {
         });
     };
 
-
-
     return (
         <div className="bg-white flex flex-col flex-1 h-full w-full relative">
             <AdminNavbar />
